@@ -72,7 +72,7 @@ class _MyDetailState extends State<MyDetail> {
     log("$listOfAllSpots");
     // getAllTouristSpot();
   }
-
+  //add more pictures here
   void _showSpotDetails(Map spot) {
     showDialog(
       context: context,
