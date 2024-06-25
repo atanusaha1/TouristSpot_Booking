@@ -76,12 +76,12 @@ class _myRegisterState extends State<myRegister> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Register'),
+        title: Text('Register', style: TextStyle(color: Colors.lightGreen)),
       ),
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('assets/2024.jpg'),
+            image: AssetImage('assets/All_SignInSignUp.jpg'),
             fit: BoxFit.cover,
           ),
         ),

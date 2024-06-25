@@ -23,13 +23,14 @@ class _MyLoginState extends State<MyLogin> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Login'),
+        title: const Text('Login',style: TextStyle(color: Colors.lightGreen)),
+
         automaticallyImplyLeading: false,
       ),
       body: Container(
           decoration: const BoxDecoration(
               image: DecorationImage(
-                  image: AssetImage('assets/12345.jpeg'), fit: BoxFit.cover)),
+                  image: AssetImage('assets/All_SignInSignUp.jpg'), fit: BoxFit.cover)),
           child: Scaffold(
             backgroundColor: Colors.transparent,
             body: Stack(
