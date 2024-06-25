@@ -11,58 +11,6 @@ class MyDetail extends StatefulWidget {
 }
 
 class _MyDetailState extends State<MyDetail> {
-  // List<Map<String, dynamic>> listOfAllSpots = [
-  //   {
-  //     "name": 'Chabimura',
-  //     "location": 'Amarpur',
-  //     "images": '',
-  //     "district": "",
-  //     "category": "",
-  //     "imageUrl": [],
-  //     "description": "",
-  //     "rating": ""
-  //   },
-  //   {
-  //     "name": 'Bash Gram',
-  //     "location": 'katlamara',
-  //     "images": 'http://10.10.10.114/uploads/290c1f54-2b87-416b-8614-1e37c9dd8f9b.j',
-  //     "district": "",
-  //     "category": "",
-  //     "imageUrl": [],
-  //     "description": "",
-  //     "rating": ""
-  //   },
-  //   {
-  //     "name": 'Dumboor Lake',
-  //     "location": '',
-  //     "images": 'http://10.10.10.114/uploads/c2a59251-e31b-40dd-9af2-24823d27c9b5.jpg',
-  //     "district": "",
-  //     "category": "",
-  //     "imageUrl": [],
-  //     "description": "",
-  //     "rating": ""
-  //   },
-  //   {
-  //     "name": 'Chowda Devta Mandir',
-  //     "location": '',
-  //     "images": 'http://10.10.10.114/uploads/4b22b198-ecbc-4903-bdb9-ab3782426c52.jpg',
-  //     "district": "",
-  //     "category": "",
-  //     "imageUrl": [],
-  //     "description": "",
-  //     "rating": ""
-  //   },
-  //   {
-  //     "name": 'Jampui Hills',
-  //     "location": '',
-  //     "images": 'http://10.10.10.114/uploads/2b908425-fb73-46c0-be3f-22f8bdafc5e4.jpg',
-  //     "district": "",
-  //     "category": "",
-  //     "imageUrl": [],
-  //     "description": "",
-  //     "rating": ""
-  //   },
-  // ];
   List? listOfAllSpots = [];
   @override
   void initState() {
@@ -129,7 +77,7 @@ class _MyDetailState extends State<MyDetail> {
                         ),
                         const SizedBox(height: 8),
                         Text(
-                          spot['description'] ?? '',
+                          widget.spot['description'] ?? '',
                           style: TextStyle(
                             fontSize: 16,
                             color: Colors.grey[800],
@@ -230,7 +178,7 @@ class _MyDetailState extends State<MyDetail> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        'Book Ticket for ${spot['name']}',
+                        'Book Ticket for ${widget.spot['name']}',
                         style: TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
@@ -355,6 +303,7 @@ class _MyDetailState extends State<MyDetail> {
           children: [
             Text(widget.spot['name']),
             Text(widget.spot['location']),
+            Text(widget.spot['description']),
             Image.network(widget.spot['images'][3]['link']),    /////////////////////////////////
             // Expanded(child: ListView.builder(
             //   itemCount: listOfAllSpots!.length,
