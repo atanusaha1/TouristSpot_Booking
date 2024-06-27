@@ -1,18 +1,18 @@
 import 'dart:convert';
-
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'Login.dart';
 import 'package:dio/dio.dart';
 
-class myRegister extends StatefulWidget {
-  const myRegister({super.key});
+class MyRegister extends StatefulWidget {
+  const MyRegister({super.key});
 
   @override
-  State<myRegister> createState() => _myRegisterState();
+  State<MyRegister> createState() => _MyRegisterState();
 }
 
-class _myRegisterState extends State<myRegister> {
+class _MyRegisterState extends State<MyRegister> {
   TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController mobileController = TextEditingController();
@@ -22,19 +22,20 @@ class _myRegisterState extends State<myRegister> {
   bool _passwordVisible = true;
 
   void registerUser(String name, String email, String mobile, String address,
-      String password) async {
-    String url = "http://10.10.10.100/web/authentication/signup";
+      String password, String confirmpassword) async {
+    String url = "http://10.10.10.132/web/users";
     var body = {
       'name': name,
       'email': email,
       'mobile': mobile,
       'address': address,
       'password': password,
+      'confirm password': confirmpassword,
     };
 
     Dio dio = Dio();
-    // try {
-        var response = await dio.post(
+    try {
+      var response = await dio.post(
         url,
         data: jsonEncode(body),
         options: Options(
@@ -43,27 +44,21 @@ class _myRegisterState extends State<myRegister> {
           },
         ),
       );
-      Map map = response.data;
-      print(map);
-      try {
-      if (response.statusCode == 200) {
-        Fluttertoast.showToast(
-          msg: "Registration successful!",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.CENTER,
-        );
+      log("[i] raw Registration response  ${response.data}");
+      if (response.data['status']) {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => MyLogin()),
+          MaterialPageRoute(builder: (context) => const MyLogin()),
         );
       } else {
         Fluttertoast.showToast(
-          msg: "Registration failed. Please try again.",
+          msg: "Registration failed: ${response.data['message']}",
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.CENTER,
         );
       }
     } catch (e) {
+      log("[e] $e");
       Fluttertoast.showToast(
         msg: "Error: $e",
         toastLength: Toast.LENGTH_SHORT,
@@ -75,253 +70,229 @@ class _myRegisterState extends State<myRegister> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Register', style: TextStyle(color: Colors.lightGreen)),
-      ),
-      body: Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('assets/All_SignInSignUp.jpg'),
-            fit: BoxFit.cover,
+      body: Stack(
+        children: [
+          Container(
+            height: double.infinity,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(colors: [Colors.green.shade700,Colors.green.shade800,Colors.green.shade900]),
+            ),
+            child: const Padding(
+              padding: EdgeInsets.only(top: 100.0, left: 24),
+              child: Text(
+                'Create Your\nAccount',
+                style: TextStyle(
+                    fontSize: 40,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold),
+              ),
+            ),
           ),
-        ),
-        child: Scaffold(
-          backgroundColor: Colors.transparent,
-          body: Stack(
-            children: [
-              Container(
-                padding: const EdgeInsets.only(left: 270, top: 5),
-                child: const Text('Welcome Tourists',
-                    style: TextStyle(color: Colors.white, fontSize: 20)),
+          Padding(
+            padding: const EdgeInsets.only(top: 250.0),
+            child: Container(
+              decoration: const BoxDecoration(
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(40),
+                    topRight: Radius.circular(40)),
+                color: Colors.white,
               ),
-              Container(
-                padding: const EdgeInsets.only(left: 300, top: 27),
-                child: const Text('PLEASE REGISTER',
-                    style: TextStyle(color: Colors.white, fontSize: 15)),
-              ),
-              Container(
-                padding: EdgeInsets.only(left: 35, top: 170),
-                child: Text(
-                  'Create Account',
-                  style: TextStyle(color: Colors.white, fontSize: 20),
-                ),
-              ),
-              SingleChildScrollView(
-                child: Container(
-                  padding: EdgeInsets.only(
-                    top: MediaQuery.of(context).size.height * 0.25,
-                    left: 20,
-                    right: 20,
-                  ),
+              height: double.infinity,
+              width: double.infinity,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 70.0, right: 70),
+                child: SingleChildScrollView(
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
+                      const SizedBox(height: 30),
                       TextField(
                         controller: nameController,
-                        style: TextStyle(color: Colors.white),
                         decoration: InputDecoration(
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide(
-                              color: Colors.white,
+                          suffixIcon: Icon(
+                            Icons.check,
+                            color: Colors.grey,
+                          ),
+                          label: Text(
+                            'Full Name',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.green.shade900,
                             ),
                           ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide(
-                              color: Colors.white,
-                            ),
-                          ),
-                          hintText: "Name",
-                          hintStyle: TextStyle(color: Colors.white),
-                          labelText: 'Name',
-                          labelStyle: TextStyle(color: Colors.white),
                         ),
                       ),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       TextField(
                         controller: emailController,
-                        style: TextStyle(color: Colors.white),
                         decoration: InputDecoration(
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide(
-                              color: Colors.white,
+                          suffixIcon: Icon(
+                            Icons.check,
+                            color: Colors.grey,
+                          ),
+                          label: Text(
+                            'Gmail',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.green.shade900,
                             ),
                           ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide(
-                              color: Colors.white,
-                            ),
-                          ),
-                          hintText: "Email",
-                          hintStyle: TextStyle(color: Colors.white),
-                          labelText: 'Email',
-                          labelStyle: TextStyle(color: Colors.white),
                         ),
                       ),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       TextField(
                         controller: mobileController,
                         keyboardType: TextInputType.phone,
-                        style: TextStyle(color: Colors.white),
                         decoration: InputDecoration(
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide(
-                              color: Colors.white,
+                          suffixIcon: Icon(
+                            Icons.check,
+                            color: Colors.grey,
+                          ),
+                          label: Text(
+                            'Mobile',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.green.shade900,
                             ),
                           ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide(
-                              color: Colors.white,
-                            ),
-                          ),
-                          hintText: "Mobile",
-                          hintStyle: TextStyle(color: Colors.white),
-                          labelText: 'Mobile',
-                          labelStyle: TextStyle(color: Colors.white),
                         ),
                       ),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       TextField(
                         controller: addressController,
-                        style: TextStyle(color: Colors.white),
                         decoration: InputDecoration(
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide(
-                              color: Colors.white,
+                          suffixIcon: Icon(
+                            Icons.check,
+                            color: Colors.grey,
+                          ),
+                          label: Text(
+                            'Address',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.green.shade900,
                             ),
                           ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide(
-                              color: Colors.white,
-                            ),
-                          ),
-                          hintText: "Address",
-                          hintStyle: TextStyle(color: Colors.white),
-                          labelText: 'Address',
-                          labelStyle: TextStyle(color: Colors.white),
                         ),
                       ),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       TextField(
                         controller: passController,
-                        style: TextStyle(color: Colors.white),
                         obscureText: _passwordVisible,
                         decoration: InputDecoration(
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide(
-                              color: Colors.white,
-                            ),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide(
-                              color: Colors.white,
-                            ),
-                          ),
-                          hintText: "Password",
-                          hintStyle: TextStyle(color: Colors.white),
-                          labelText: 'Password',
-                          labelStyle: TextStyle(color: Colors.white),
                           suffixIcon: IconButton(
+                            icon: Icon(
+                              _passwordVisible
+                                  ? Icons.visibility_off
+                                  : Icons.visibility,
+                              color: Colors.grey,
+                            ),
                             onPressed: () {
                               setState(() {
                                 _passwordVisible = !_passwordVisible;
                               });
                             },
-                            icon: Icon(!_passwordVisible
-                                ? Icons.visibility_off
-                                : Icons.visibility),
-                            color: Colors.white,
+                          ),
+                          label: Text(
+                            'Password',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.green.shade900,
+                            ),
                           ),
                         ),
                       ),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       TextField(
                         controller: confirmPassController,
-                        style: TextStyle(color: Colors.white),
                         obscureText: true,
                         decoration: InputDecoration(
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide(
-                              color: Colors.white,
+                          suffixIcon: Icon(
+                            Icons.visibility_off,
+                            color: Colors.grey,
+                          ),
+                          label: Text(
+                            'Confirm Password',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.green.shade900,
                             ),
                           ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide(
-                              color: Colors.white,
-                            ),
-                          ),
-                          hintText: "Confirm Password",
-                          hintStyle: TextStyle(color: Colors.white),
-                          labelText: 'Confirm Password',
-                          labelStyle: TextStyle(color: Colors.white),
                         ),
                       ),
-                      SizedBox(height: 30),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          TextButton(
-                            style: ButtonStyle(
-                              foregroundColor:
-                                  MaterialStateProperty.all<Color>(Colors.blue),
+                      const SizedBox(height: 30),
+                      GestureDetector(
+                        onTap: () {
+                          if (_validateFields()) {
+                            registerUser(
+                              nameController.text.trim(),
+                              emailController.text.trim(),
+                              mobileController.text.trim(),
+                              addressController.text.trim(),
+                              passController.text.trim(),
+                              confirmPassController.text.trim(),
+                            );
+                          }
+                        },
+                        child: Container(
+                          height: 55,
+                          width: 300,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(30),
+                            gradient: LinearGradient(
+                              colors: [Colors.green.shade700,Colors.green.shade800,Colors.green.shade900],
                             ),
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => MyLogin(),
-                                ),
-                              );
-                            },
-                            child: const Text('sign in',
-                                style: TextStyle(
-                                    color: Colors.lightBlue,
-                                    fontSize: 20,
-                                    decoration: TextDecoration.underline)),
                           ),
-                          ElevatedButton(
-                            style: ButtonStyle(
-                              backgroundColor:
-                                  MaterialStateProperty.all<Color>(Colors.blue),
-                            ),
-                            onPressed: () {
-                              // Validate input fields
-                              if (_validateFields()) {
-                                registerUser(
-                                  nameController.text.trim(),
-                                  emailController.text.trim(),
-                                  mobileController.text.trim(),
-                                  addressController.text.trim(),
-                                  passController.text.trim(),
-                                );
-                              }
-                            },
-                            child: const Text('Save',
-                                style: TextStyle(
-                                  color: Colors.white,
+                          child: const Center(
+                            child: Text(
+                              'SAVE',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
                                   fontSize: 20,
-                                )),
+                                  color: Colors.white),
+                            ),
                           ),
-                        ],
+                        ),
                       ),
+                      const SizedBox(height: 90),
+                      Align(
+                        alignment: Alignment.bottomRight,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            const Text(
+                              "Already Have An Account?",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.grey),
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => const MyLogin()),
+                                );
+                              },
+                              child: const Text(
+                                "Sign In",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 20,
+                                    color: Colors.black),
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
                     ],
                   ),
                 ),
               ),
-            ],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }
@@ -332,8 +303,7 @@ class _myRegisterState extends State<myRegister> {
         mobileController.text.isEmpty ||
         addressController.text.isEmpty ||
         passController.text.isEmpty ||
-        confirmPassController.text.isEmpty)
-    {
+        confirmPassController.text.isEmpty) {
       Fluttertoast.showToast(
         msg: "Please fill all fields.",
         toastLength: Toast.LENGTH_SHORT,

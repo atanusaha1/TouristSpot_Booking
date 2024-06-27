@@ -1,11 +1,8 @@
-import 'dart:convert';
 import 'dart:developer';
-import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:new_flutter_project/Details.dart';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
-
+import 'package:new_flutter_project/reviews.dart';
 import 'Profile.dart';
 import 'home_app_bar.dart';
 
@@ -17,7 +14,6 @@ class myHome extends StatefulWidget {
 }
 
 class _myHomeState extends State<myHome> {
-  // List<Map<String, dynamic>> listOfSpots = [];
 
   List? listOfSpots = [];
 
@@ -26,6 +22,7 @@ class _myHomeState extends State<myHome> {
     super.initState();
     getTouristSpot();
   }
+
   int _currentIndex = 0;
 
   @override
@@ -41,40 +38,53 @@ class _myHomeState extends State<myHome> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             InkWell(
-              onTap: (){
+              onTap: () {
                 getTouristSpot();
               },
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: Container(
-                  decoration: const BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment(0.8, 1),
-                      colors: <Color>[
-                        Color(0xff1f005c),
-                        Color(0xff5b0060),
-                        Color(0xff870160),
-                        Color(0xffac255e),
-                        Color(0xffca485c),
-                        Color(0xffe16b5c),
-                        Color(0xfff39060),
-                        Color(0xffffb56b),
-                      ],
+                child: Row(
+                  children: [
+                    Container(
+                      decoration: const BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment(0.8, 1),
+                          colors: <Color>[
+                            Color(0xff1f005c),
+                            Color(0xff5b0060),
+                            Color(0xff870160),
+                            Color(0xffac255e),
+                            Color(0xffca485c),
+                            Color(0xffe16b5c),
+                            Color(0xfff39060),
+                            Color(0xffffb56b),
+                          ],
+                        ),
+                        borderRadius: BorderRadius.all(Radius.circular(8)),
+                      ),
+                      padding: const EdgeInsets.all(16.0),
+                      child: const Text(
+                        'Welcome Tourist',
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
                     ),
-                  ),
-                  padding: const EdgeInsets.all(8.0),
-                  child: const Text(
-                    'Welcome Tourist',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white, // Ensuring text is readable on gradient
+                    const SizedBox(width: 16),
+                    const Text(
+                      'Please Select\nYour Favourite Destination.....',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.brown,
+                      ),
                     ),
-                  ),
+                  ],
                 ),
               ),
-
             ),
             const SizedBox(height: 16),
             Expanded(
@@ -86,15 +96,15 @@ class _myHomeState extends State<myHome> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => MyDetail(spot: listOfSpots![index]),
+                          builder: (context) =>
+                              MyDetail(spot: listOfSpots![index]),
                         ),
                       );
                     },
                     child: Container(
-                      constraints: BoxConstraints(
-                        maxHeight: 290
-                      ),
-                      margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                      constraints: BoxConstraints(maxHeight: 290),
+                      margin: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 8),
                       child: Card(
                         elevation: 5,
                         shape: RoundedRectangleBorder(
@@ -103,16 +113,39 @@ class _myHomeState extends State<myHome> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            ClipRRect(
-                              borderRadius: const BorderRadius.vertical(
-                                top: Radius.circular(15),
-                              ),
-                              child: Image.network(
-                                listOfSpots![index]['images'][0]['link'] ?? '',
-                                height: 168,
-                                width: double.infinity,
-                                fit: BoxFit.cover,
-                              ),
+                            Stack(
+                              children: [
+                                ClipRRect(
+                                  borderRadius: const BorderRadius.vertical(
+                                    top: Radius.circular(15),
+                                  ),
+                                  child: Image.network(
+                                    listOfSpots![index]['images'][0]['link'] ??
+                                        '',
+                                    height: 168,
+                                    width: double.infinity,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                                Positioned(
+                                  bottom: 10,
+                                  right: 10,
+                                  child: Container(
+                                    padding: const EdgeInsets.all(6.0),
+                                    decoration: BoxDecoration(
+                                      color: Colors.black54,
+                                      borderRadius: BorderRadius.circular(8.0),
+                                    ),
+                                    child: Text(
+                                      listOfSpots![index]['category'] ?? '',
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 14,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                             Padding(
                               padding: const EdgeInsets.all(12.0),
@@ -147,7 +180,6 @@ class _myHomeState extends State<myHome> {
                                       ),
                                     ],
                                   ),
-
                                   const SizedBox(height: 4),
                                   Row(
                                     children: [
@@ -206,10 +238,14 @@ class _myHomeState extends State<myHome> {
                   Navigator.push(context,
                       MaterialPageRoute(builder: (context) => myHome()));
                 },
-                icon: const Icon(Icons.home, size: 30, color: Colors.lightGreen)),
+                icon:
+                const Icon(Icons.home, size: 30, color: Colors.lightGreen)),
             IconButton(
-                onPressed: () {},
-                icon: const Icon(Icons.favorite,
+                onPressed: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => Reviews()));
+                },
+                icon: const Icon(Icons.reviews,
                     size: 30, color: Colors.lightGreen)),
             IconButton(
                 onPressed: () {
@@ -224,26 +260,25 @@ class _myHomeState extends State<myHome> {
           ],
         ),
       ),
-
     );
   }
 
   getTouristSpot() async {
-    String url = "http://10.10.10.114/web/spots";
+    String url = "http://10.10.10.132/web/spots";
     Dio dio = Dio();
 
     listOfSpots = [];
     try {
       var response = await dio.get(url);
       Map map = response.data;
-      log('[i] TOURIST SPOT list $map');
+      // log('[i] TOURIST SPOT list $map');
       if (map['status']) {
-        for (var spots in map['result']){
-        log('[i]$spots');
+        for (var spots in map['result']) {
+          // log('[i]$spots');
           listOfSpots!.add(spots);
         }
         setState(() {});
-      }else{
+      } else {
         log('[e] Tourist Spot not found');
       }
     } catch (e) {
@@ -251,15 +286,3 @@ class _myHomeState extends State<myHome> {
     }
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-

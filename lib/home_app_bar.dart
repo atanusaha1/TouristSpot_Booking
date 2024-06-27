@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'Profile.dart';
 
 class HomeAppBar extends StatefulWidget {
   const HomeAppBar({Key? key}) : super(key: key);
@@ -12,16 +13,21 @@ class _HomeAppBarState extends State<HomeAppBar> {
   TextEditingController _searchController = TextEditingController();
   String _searchText = '';
 
-  // Sample list of items with name and location
   final List<Map<String, String>> _items = [
     {"name": "Unakoti", "location": "Kailasahar District"},
     {"name": "Tripura State Museum", "location": "Agartala,West Tripura"},
     {"name": "Tripura Sundari Temple", "location": "Udaipur,Gomati District"},
-    {"name": "Pilak - in Jolaibari, South Tripura", "location": "shantirbazar,South Tripura"},
+    {
+      "name": "Pilak - in Jolaibari, South Tripura",
+      "location": "shantirbazar,South Tripura"
+    },
     {"name": "Neermahal", "location": "melaghar"},
     {"name": "Sepahijala", "location": "bishalgar"},
     {"name": "Dumboor Lake", "location": "Gandachera sub division"},
-    {"name": "Trishna Wild Life Sanctuary", "location": "Belonia,south tripura district"},
+    {
+      "name": "Trishna Wild Life Sanctuary",
+      "location": "Belonia,south tripura district"
+    },
     {"name": "Jampui Hills", "location": "north tripura District"},
     {"name": "Silcherra budhha waterfall", "location": "Pecharthal Waterfall"},
     {"name": "Tuisoi Waterfal", "location": "Saikar Bazar"},
@@ -32,7 +38,7 @@ class _HomeAppBarState extends State<HomeAppBar> {
   @override
   void initState() {
     super.initState();
-    _filteredItems = List.from(_items); // Initialize filtered items with all items
+    _filteredItems = List.from(_items);
   }
 
   void _searchItems() {
@@ -45,7 +51,8 @@ class _HomeAppBarState extends State<HomeAppBar> {
           final locationLower = item['location']!.toLowerCase();
           final searchLower = _searchText.toLowerCase();
 
-          return nameLower.contains(searchLower) || locationLower.contains(searchLower);
+          return nameLower.contains(searchLower) ||
+              locationLower.contains(searchLower);
         }).toList();
       }
     });
@@ -61,27 +68,33 @@ class _HomeAppBarState extends State<HomeAppBar> {
           padding: const EdgeInsets.all(20),
           child: Row(
             children: [
-              Container(
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Colors.black26,
-                      blurRadius: 6,
-                    )
-                  ],
-                  borderRadius: BorderRadius.circular(25),
-                ),
-                child: Image.asset(
-                  'assets/T2.jpg', // Replace with your logo path
-                  width: 30,
-                  height: 30,
+              InkWell(
+                onTap: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => Profile()));
+                },
+                child: Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Colors.black26,
+                        blurRadius: 6,
+                      )
+                    ],
+                    borderRadius: BorderRadius.circular(25),
+                  ),
+                  child: Image.asset(
+                    'assets/T2.jpg',
+                    width: 30,
+                    height: 30,
+                  ),
                 ),
               ),
-              const Spacer(), // Spacer to push location info to the center
+              const Spacer(),
               _isSearching ? _buildSearchField() : _buildLocationInfo(),
-              const Spacer(), // Spacer to maintain equal spacing
+              const Spacer(),
               InkWell(
                 onTap: () {
                   setState(() {
@@ -106,7 +119,6 @@ class _HomeAppBarState extends State<HomeAppBar> {
             ],
           ),
         ),
-        // Display the filtered list of items
         Expanded(
           child: ListView.builder(
             itemCount: _filteredItems.length,
@@ -125,7 +137,7 @@ class _HomeAppBarState extends State<HomeAppBar> {
 
   Widget _buildSearchField() {
     return Container(
-      width: MediaQuery.of(context).size.width * 0.6, // Adjust the width as needed
+      width: MediaQuery.of(context).size.width * 0.6,
       // padding: const EdgeInsets.only(left: 12,),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -144,11 +156,11 @@ class _HomeAppBarState extends State<HomeAppBar> {
           setState(() {
             _searchText = value;
           });
-          _searchItems(); // Call search function here
+          _searchItems();
         },
         decoration: InputDecoration(
-          contentPadding: EdgeInsets.only(left: 35,
-          bottom: 10,right: 10,top: 12),
+          contentPadding:
+          EdgeInsets.only(left: 35, bottom: 10, right: 10, top: 12),
           hintText: 'Search...',
           border: InputBorder.none,
           suffixIcon: IconButton(
@@ -158,7 +170,7 @@ class _HomeAppBarState extends State<HomeAppBar> {
                 _searchController.clear();
                 _searchText = '';
               });
-              _searchItems(); // Call clear function or search function with empty text here
+              _searchItems();
             },
           ),
         ),
@@ -168,7 +180,7 @@ class _HomeAppBarState extends State<HomeAppBar> {
 
   Widget _buildLocationInfo() {
     return const Row(
-      mainAxisSize: MainAxisSize.min, // To make sure the Row takes minimum space
+      mainAxisSize: MainAxisSize.min,
       children: [
         Icon(Icons.location_on, color: Color(0xFFF65959)),
         SizedBox(width: 8),
