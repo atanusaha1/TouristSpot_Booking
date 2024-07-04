@@ -28,14 +28,16 @@ class _ReviewsState extends State<Reviews> {
 
   void _submitReview() {
     if (_formKey.currentState!.validate()) {
-      ratingService(_spotController.text, _rating.toString(), _reviewController.text, _spotIdController.toString());
+      ratingService(_spotController.text, _rating.toString(),
+          _reviewController.text, _spotIdController.toString());
     }
   }
 
-  void ratingService(String spot, String rating,String spotId, String feedback) async {
-    String url = "http://10.10.10.132/web/review";
+  void ratingService(
+      String spot, String rating, String spotId, String feedback) async {
+    String url = "http://10.10.10.136/web/review";
     var body = {
-      'spotId' : spotId,
+      'spotId': spotId,
       'spot': spot,
       'rating': rating,
       'feedback': feedback,
@@ -92,7 +94,8 @@ class _ReviewsState extends State<Reviews> {
   }
 
   void getReviews() async {
-    String url = "http://10.10.10.132/web/review?spotId=66746025dfa4f309c1a12a38";
+    String url =
+        "http://10.10.10.132/web/review?spotId=66746025dfa4f309c1a12a38";
     Dio dio = Dio();
     try {
       var response = await dio.get(url);
@@ -100,12 +103,14 @@ class _ReviewsState extends State<Reviews> {
       if (map['status']) {
         List<dynamic> results = map['result'];
         setState(() {
-          reviews.addAll(results.map((review) => Review(
-            spot: review['spot'],
-            feedback: review['feedback'],
-            rating: double.parse(review['rating']),
-            date: DateTime.parse(review['date']),
-          )).toList());
+          reviews.addAll(results
+              .map((review) => Review(
+                    spot: review['spot'],
+                    feedback: review['feedback'],
+                    rating: double.parse(review['rating']),
+                    date: DateTime.parse(review['date']),
+                  ))
+              .toList());
         });
       } else {
         log('[e] Reviews not found');
@@ -120,7 +125,8 @@ class _ReviewsState extends State<Reviews> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
-        title: const Text('Reviews', style: TextStyle(color: Colors.lightGreen)),
+        title:
+            const Text('Reviews', style: TextStyle(color: Colors.lightGreen)),
         iconTheme: const IconThemeData(color: Colors.black),
       ),
       backgroundColor: Colors.grey[200],
@@ -175,7 +181,8 @@ class _ReviewsState extends State<Reviews> {
                           direction: Axis.horizontal,
                           allowHalfRating: true,
                           itemCount: 5,
-                          itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
+                          itemPadding:
+                              const EdgeInsets.symmetric(horizontal: 4.0),
                           itemBuilder: (context, _) => const Icon(
                             Icons.star,
                             color: Colors.amber,
@@ -280,13 +287,15 @@ class _ReviewsState extends State<Reviews> {
                   Navigator.push(context,
                       MaterialPageRoute(builder: (context) => myHome()));
                 },
-                icon: const Icon(Icons.home, size: 30, color: Colors.lightGreen)),
+                icon:
+                    const Icon(Icons.home, size: 30, color: Colors.lightGreen)),
             IconButton(
                 onPressed: () {
                   Navigator.push(context,
                       MaterialPageRoute(builder: (context) => Reviews()));
                 },
-                icon: const Icon(Icons.reviews, size: 30, color: Colors.lightGreen)),
+                icon: const Icon(Icons.reviews,
+                    size: 30, color: Colors.lightGreen)),
             IconButton(
                 onPressed: () {
                   Navigator.push(context,

@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_navigation/src/root/get_material_app.dart';
+import 'package:new_flutter_project/welcomeScreen.dart';
+// import 'package:get/get.dart';
+import 'Login.dart';
 
 void main() {
   runApp(const MyApp());
@@ -14,6 +19,7 @@ class MyApp extends StatelessWidget {
       title: 'Tourist App',
       theme: ThemeData(
         primarySwatch: Colors.lightGreen,
+        visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: const MainPage(),
     );
@@ -33,19 +39,13 @@ class _MainPageState extends State<MainPage> {
   static const List<Widget> _pages = <Widget>[
     Profile(),
   ];
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
-        title: const Text('Main Page', style: TextStyle(color: Colors.lightGreen)),
+        title:
+            const Text('Main Page', style: TextStyle(color: Colors.lightGreen)),
         iconTheme: const IconThemeData(color: Colors.black),
       ),
       drawer: _buildDrawer(),
@@ -53,14 +53,26 @@ class _MainPageState extends State<MainPage> {
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.person),
+            icon: Icon(Icons.person_outline),
             label: 'Profile',
           ),
-          // Add more BottomNavigationBarItems for other pages
+          BottomNavigationBarItem(
+            icon: Icon(Icons.question_answer_outlined),
+            label: 'FAQ & Help',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.help_outline),
+            label: 'Terms and Conditions',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.contact_mail_outlined),
+            label: 'Contact Us',
+          ),
         ],
         currentIndex: _selectedIndex,
         selectedItemColor: Colors.lightGreen,
-        onTap: _onItemTapped,
+        unselectedItemColor: Colors.grey,
+        // onTap: _onItemTapped,
       ),
     );
   }
@@ -71,13 +83,13 @@ class _MainPageState extends State<MainPage> {
         padding: EdgeInsets.zero,
         children: <Widget>[
           DrawerHeader(
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               color: Colors.lightGreen,
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                CircleAvatar(
+                const CircleAvatar(
                   radius: 30,
                   backgroundColor: Colors.white,
                   child: CircleAvatar(
@@ -86,7 +98,7 @@ class _MainPageState extends State<MainPage> {
                   ),
                 ),
                 const SizedBox(height: 10),
-                Text(
+                const Text(
                   'Welcome Tourists',
                   style: TextStyle(
                     color: Colors.white,
@@ -97,62 +109,57 @@ class _MainPageState extends State<MainPage> {
               ],
             ),
           ),
-          ListTile(
-            title: const Text('Update Personal Information'),
-            onTap: () {
-              Navigator.pop(context);
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return DialogBox();
-                },
-              );
-            },
-          ),
-          ListTile(
-            title: const Text('FAQ & Help'),
-            onTap: () {
-              Navigator.pop(context);
-              Get.to(() => FAQScreen());
-            },
-          ),
-          ListTile(
-            title: const Text('Help'),
-            onTap: () {
-              Navigator.pop(context);
-              // Implement Help screen navigation
-            },
-          ),
-          ListTile(
-            title: const Text('Contact Us'),
-            onTap: () {
-              Navigator.pop(context);
-              // Implement Contact Us screen navigation
-            },
-          ),
+          _buildDrawerItem('Update Personal Information', Icons.person_outline,
+              () {
+            Navigator.pop(context);
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return const DialogBox();
+              },
+            );
+          }),
+          _buildDrawerItem('FAQ & Help', Icons.question_answer_outlined, () {
+            Navigator.pop(context);
+            MaterialPageRoute(builder: (context) => const FAQScreen());
+          }),
+          _buildDrawerItem('Terms and Conditions', Icons.help_outline, () {
+            Navigator.pop(context);
+            MaterialPageRoute(builder: (context) => const HelpScreen());
+          }),
+          _buildDrawerItem('Contact Us', Icons.contact_mail_outlined, () {
+            Navigator.pop(context);
+            MaterialPageRoute(builder: (context) => const ContactUsScreen());
+          }),
           const Divider(),
-          ListTile(
-            title: const Text('Booking Status'),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => BookingStatusScreen()),
-              );
-            },
-          ),
+          _buildDrawerItem('Booking Status', Icons.book_online_outlined, () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => const BookingStatusScreen()),
+            );
+          }),
           const Divider(),
-          ListTile(
-            title: const Text('Log Out', style: TextStyle(color: Colors.red)),
-            onTap: () {
-              Navigator.pop(context);
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => MyLogin()),
-              );
-            },
-          ),
+          _buildDrawerItem('Log Out', Icons.logout, () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const MyLogin()),
+            );
+          }, textColor: Colors.red),
         ],
       ),
+    );
+  }
+
+  Widget _buildDrawerItem(String title, IconData icon, VoidCallback onTap,
+      {Color textColor = Colors.black}) {
+    return ListTile(
+      leading: Icon(icon, color: textColor),
+      title: Text(
+        title,
+        style: TextStyle(color: textColor),
+      ),
+      onTap: onTap,
     );
   }
 }
@@ -165,7 +172,8 @@ class Profile extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
-        title: const Text('Profile', style: TextStyle(color: Colors.lightGreen)),
+        title:
+            const Text('Profile', style: TextStyle(color: Colors.lightGreen)),
         iconTheme: const IconThemeData(color: Colors.black),
       ),
       body: Padding(
@@ -177,9 +185,9 @@ class Profile extends StatelessWidget {
               alignment: Alignment.topCenter,
               child: CircleAvatar(
                 radius: 50,
-                backgroundColor: Colors.black54,
+                backgroundColor: Colors.green,
                 child: CircleAvatar(
-                  radius: 75,
+                  radius: 70,
                   backgroundImage: AssetImage('assets/T2.jpg'),
                 ),
               ),
@@ -188,7 +196,7 @@ class Profile extends StatelessWidget {
             Center(
               child: Text(
                 'Welcome Tourists',
-                style: TextStyle(color: Colors.lightGreen, fontSize: 24),
+                style: TextStyle(color: Colors.green, fontSize: 24),
               ),
             ),
             const SizedBox(height: 8),
@@ -206,7 +214,7 @@ class Profile extends StatelessWidget {
                 showDialog(
                   context: context,
                   builder: (BuildContext context) {
-                    return DialogBox();
+                    return const DialogBox();
                   },
                 );
               },
@@ -216,19 +224,29 @@ class Profile extends StatelessWidget {
             _buildListTile(
               title: 'FAQ & Help',
               onTap: () {
-                Get.to(() => FAQScreen());
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const FAQScreen()),
+                );
               },
             ),
             _buildListTile(
-              title: 'Help',
+              title: 'Terms and Conditions',
               onTap: () {
-                // Implement Help screen navigation
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const HelpScreen()),
+                );
               },
             ),
             _buildListTile(
               title: 'Contact Us',
               onTap: () {
-                // Implement Contact Us screen navigation
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const ContactUsScreen()),
+                );
               },
             ),
             _buildDivider(),
@@ -237,7 +255,8 @@ class Profile extends StatelessWidget {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => BookingStatusScreen()),
+                  MaterialPageRoute(
+                      builder: (context) => const BookingStatusScreen()),
                 );
               },
             ),
@@ -248,7 +267,8 @@ class Profile extends StatelessWidget {
               onTap: () {
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (context) => MyLogin()),
+                  MaterialPageRoute(
+                      builder: (context) => const WelcomeScreen()),
                 );
               },
             ),
@@ -263,7 +283,8 @@ class Profile extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: Text(
         title,
-        style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold),
+        style: const TextStyle(
+            color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold),
       ),
     );
   }
@@ -336,19 +357,19 @@ class _DialogBoxState extends State<DialogBox> {
             ),
             const SizedBox(height: 24),
             ElevatedButton(
-              onPressed: (){
+              onPressed: () {
                 String name = nameController.text;
                 String email = emailController.text;
                 String mobile = mobileController.text;
                 String address = addressController.text;
                 Get.back();
-                Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(
-                    builder: (context) => Profile(),
-                  ),
-                );
+                // Navigate back to Profile screen
+                Get.offAll(const Profile());
               },
               child: const Text('Update'),
+              style: ElevatedButton.styleFrom(
+                iconColor: Colors.lightGreen,
+              ),
             ),
           ],
         ),
@@ -368,7 +389,7 @@ class _DialogBoxState extends State<DialogBox> {
         obscureText: obscureText,
         decoration: InputDecoration(
           labelText: labelText,
-          border: OutlineInputBorder(),
+          border: const OutlineInputBorder(),
         ),
       ),
     );
@@ -394,35 +415,195 @@ class FAQScreen extends StatelessWidget {
               style: TextStyle(color: Colors.black, fontSize: 20),
             ),
             const SizedBox(height: 20),
-            ExpansionTile(
-              title: const Text(
-                '',//////////////////////ques
-                style: TextStyle(color: Colors.black, fontSize: 16),
-              ),
-              children: [
-                ListTile(
-                  title: const Text(
-                    '', //////////////////ans
-                    style: TextStyle(color: Colors.black, fontSize: 14),
-                  ),
-                ),
-              ],
+            _buildFAQItem('How to book a ticket?',
+                'To book a ticket, navigate to the "Booking" page and follow the instructions provided.'),
+            _buildFAQItem('Can I cancel my booking?',
+                'Yes, you can cancel your booking from the "Booking Status" page.'),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildFAQItem(String question, String answer) {
+    return ExpansionTile(
+      title: Text(
+        question,
+        style: const TextStyle(color: Colors.black, fontSize: 16),
+      ),
+      children: [
+        ListTile(
+          title: Text(
+            answer,
+            style: const TextStyle(color: Colors.black, fontSize: 14),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class HelpScreen extends StatelessWidget {
+  const HelpScreen({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Terms and Conditions'),
+      ),
+      body: Padding(
+        padding: EdgeInsets.all(20),
+        child: ListView(
+          children: [
+            Text(
+              '1.  Introduction',
+              style: TextStyle(color: Colors.black, fontSize: 20),
             ),
-            ExpansionTile(
-              title: const Text(
-                '',/////////////////////ques
-                style: TextStyle(color: Colors.black, fontSize: 16),
-              ),
-              children: [
-                ListTile(
-                  title: const Text(
-                    '',/////////////////////ans
-                    style: TextStyle(color: Colors.black, fontSize: 14),
-                  ),
-                ),
-              ],
+            SizedBox(height: 8),
+            Text(
+              'Welcome to xlayer_Tourist Spot Booking By using our application, you agree to comply with and be bound by the following terms and conditions. Please review them carefully.',
+              style: TextStyle(color: Colors.black, fontSize: 16),
             ),
-            // Add more FAQ questions and answers here
+            SizedBox(height: 15),
+            Text(
+              '2.  Booking and Payment',
+              style: TextStyle(color: Colors.black, fontSize: 20),
+            ),
+            SizedBox(height: 8),
+            Text(
+              'BOOKING PROCESS: To book a tourist spot, you must provide accurate and complete information as requested.',
+              style: TextStyle(color: Colors.black, fontSize: 16),
+            ),
+            SizedBox(height: 5),
+            Text(
+              'PAYMENT: All payments must be made through the payment methods provided in the application. Payments are non-refundable except as outlined in our cancellation policy.',
+              style: TextStyle(color: Colors.black, fontSize: 16),
+            ),
+            SizedBox(height: 15),
+            Text(
+              '3.  Cancellation and Refunds',
+              style: TextStyle(color: Colors.black, fontSize: 20),
+            ),
+            SizedBox(height: 8),
+            Text(
+              'CANCELLATION POLICY: Cancellations must be made 24 hours before the booking date to be eligible for a refund.',
+              style: TextStyle(color: Colors.black, fontSize: 16),
+            ),
+            SizedBox(height: 5),
+            Text(
+              'REFUNDS: Refunds will be processed within 7-10 business days after the cancellation request is approved.',
+              style: TextStyle(color: Colors.black, fontSize: 16),
+            ),
+            SizedBox(height: 15),
+            Text(
+              '4.  User Conduct',
+              style: TextStyle(color: Colors.black, fontSize: 20),
+            ),
+            SizedBox(height: 8),
+            Text(
+              'COMPLIANCE: Users must comply with all applicable laws and regulations when using the application.',
+              style: TextStyle(color: Colors.black, fontSize: 16),
+            ),
+            SizedBox(height: 5),
+            Text(
+              'PROHIBITED ACTIONS: Users must not engage in any behavior that could harm or disrupt the application, other users, or the tourist spots.',
+              style: TextStyle(color: Colors.black, fontSize: 16),
+            ),
+            SizedBox(height: 15),
+            Text(
+              '5.  Privacy',
+              style: TextStyle(color: Colors.black, fontSize: 20),
+            ),
+            SizedBox(height: 8),
+            Text(
+              'DATA COLLECTION: We collect and use personal information as described in our Privacy Policy.',
+              style: TextStyle(color: Colors.black, fontSize: 16),
+            ),
+            SizedBox(height: 5),
+            Text(
+              'DATA SRCURITY: We implement reasonable measures to protect your data but cannot guarantee absolute security.',
+              style: TextStyle(color: Colors.black, fontSize: 16),
+            ),
+            SizedBox(height: 15),
+            Text(
+              '6.  Liability',
+              style: TextStyle(color: Colors.black, fontSize: 20),
+            ),
+            SizedBox(height: 8),
+            Text(
+              'NO WARRANTIES: The application is provided "as is" without any warranties of any kind.',
+              style: TextStyle(color: Colors.black, fontSize: 16),
+            ),
+            SizedBox(height: 5),
+            Text(
+              'LIMITATION OF LIABILITY: We are not liable for any damages arising from your use of the application or any bookings made through it.',
+              style: TextStyle(color: Colors.black, fontSize: 16),
+            ),
+            SizedBox(height: 15),
+            Text(
+              '7.  Changes to Terms',
+              style: TextStyle(color: Colors.black, fontSize: 20),
+            ),
+            SizedBox(height: 8),
+            Text(
+              'MODIFICATIONS: We may update these terms and conditions from time to time. Changes will be effective immediately upon posting.',
+              style: TextStyle(color: Colors.black, fontSize: 16),
+            ),
+            SizedBox(height: 15),
+            Text(
+              '8.  Governing Law',
+              style: TextStyle(color: Colors.black, fontSize: 20),
+            ),
+            SizedBox(height: 8),
+            Text(
+              'JURISDICTION: These terms and conditions are governed by the laws of India/Agartala Any disputes will be resolved in the courts of India/Agartala.',
+              style: TextStyle(color: Colors.black, fontSize: 16),
+            ),
+            SizedBox(height: 15),
+            Text(
+              '9.  Contact Us',
+              style: TextStyle(color: Colors.black, fontSize: 20),
+            ),
+            SizedBox(height: 8),
+            Text(
+              'SUPPORT: If you have any questions or concerns about these terms and conditions, please contact us at \njagritipal19@gmail.com / 8787338323 .',
+              style: TextStyle(color: Colors.black, fontSize: 16),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class ContactUsScreen extends StatelessWidget {
+  const ContactUsScreen({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Contact Us'),
+      ),
+      body: Padding(
+        padding: EdgeInsets.all(20),
+        child: ListView(
+          children: [
+            Text(
+              'Contact Us',
+              style: TextStyle(color: Colors.black, fontSize: 20),
+            ),
+            SizedBox(height: 30),
+            Text(
+              'Email: jagritipal19@gmail.com',
+              style: TextStyle(color: Colors.black, fontSize: 16),
+            ),
+            SizedBox(height: 20),
+            Text(
+              'Phone: 8787338323',
+              style: TextStyle(color: Colors.black, fontSize: 16),
+            ),
           ],
         ),
       ),
@@ -437,49 +618,46 @@ class BookingStatusScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Booking Status'),
         backgroundColor: Colors.white,
+        title: const Text('Booking Status',
+            style: TextStyle(color: Colors.lightGreen)),
         iconTheme: const IconThemeData(color: Colors.black),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
-            Icon(Icons.check_circle, size: 100, color: Colors.lightGreen),
-            SizedBox(height: 20),
-            Text(
-              'Your Booking Status',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: 10),
-            Text(
-              'Confirmed',
-              style: TextStyle(fontSize: 18, color: Colors.lightGreen),
-            ),
-          ],
-        ),
+      body: ListView(
+        padding: const EdgeInsets.all(16),
+        children: [
+          _buildStatusItem('Upcoming', 'Details about upcoming booking'),
+          _buildDivider(),
+          _buildStatusItem('Check-in', 'Details about check-in process'),
+          _buildDivider(),
+          _buildStatusItem('Check-out', 'Details about check-out process'),
+          _buildDivider(),
+          _buildStatusItem(
+              'Cancel Booking', 'Details about booking cancellation'),
+        ],
       ),
     );
   }
-}
 
-class MyLogin extends StatelessWidget {
-  const MyLogin({Key? key}) : super(key: key);
+  Widget _buildStatusItem(String title, String description) {
+    return ListTile(
+      title: Text(title,
+          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+      subtitle: Text(description),
+      trailing: Icon(Icons.arrow_forward, color: Colors.grey),
+      onTap: () {
+        // Handle item tap if needed
+      },
+    );
+  }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Login'),
-      ),
-      body: Center(
-        child: ElevatedButton(
-          onPressed: () {
-            // Implement login functionality
-          },
-          child: const Text('Login'),
-        ),
-      ),
+  Widget _buildDivider() {
+    return Divider(
+      color: Colors.grey.shade300,
+      thickness: 1,
+      height: 32,
+      indent: 16,
+      endIndent: 16,
     );
   }
 }

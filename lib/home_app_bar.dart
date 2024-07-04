@@ -1,5 +1,9 @@
+import 'dart:async';
+import 'dart:developer';
 import 'package:flutter/material.dart';
+import 'package:dio/dio.dart';
 import 'Profile.dart';
+import 'globals.dart' as globals;
 
 class HomeAppBar extends StatefulWidget {
   const HomeAppBar({Key? key}) : super(key: key);
@@ -13,49 +17,55 @@ class _HomeAppBarState extends State<HomeAppBar> {
   TextEditingController _searchController = TextEditingController();
   String _searchText = '';
 
-  final List<Map<String, String>> _items = [
-    {"name": "Unakoti", "location": "Kailasahar District"},
-    {"name": "Tripura State Museum", "location": "Agartala,West Tripura"},
-    {"name": "Tripura Sundari Temple", "location": "Udaipur,Gomati District"},
-    {
-      "name": "Pilak - in Jolaibari, South Tripura",
-      "location": "shantirbazar,South Tripura"
-    },
-    {"name": "Neermahal", "location": "melaghar"},
-    {"name": "Sepahijala", "location": "bishalgar"},
-    {"name": "Dumboor Lake", "location": "Gandachera sub division"},
-    {
-      "name": "Trishna Wild Life Sanctuary",
-      "location": "Belonia,south tripura district"
-    },
-    {"name": "Jampui Hills", "location": "north tripura District"},
-    {"name": "Silcherra budhha waterfall", "location": "Pecharthal Waterfall"},
-    {"name": "Tuisoi Waterfal", "location": "Saikar Bazar"},
-  ];
-
-  List<Map<String, String>> _filteredItems = [];
+  final StreamController<List<Map<String, String>>> _streamController =
+      StreamController();
 
   @override
   void initState() {
     super.initState();
-    _filteredItems = List.from(_items);
+    _searchController.addListener(_searchItems);
+    _searchItems();
   }
 
-  void _searchItems() {
-    setState(() {
-      if (_searchText.isEmpty) {
-        _filteredItems = List.from(_items);
-      } else {
-        _filteredItems = _items.where((item) {
-          final nameLower = item['name']!.toLowerCase();
-          final locationLower = item['location']!.toLowerCase();
-          final searchLower = _searchText.toLowerCase();
+  @override
+  void dispose() {
+    _searchController.dispose();
+    _streamController.close();
+    super.dispose();
+  }
 
-          return nameLower.contains(searchLower) ||
-              locationLower.contains(searchLower);
-        }).toList();
+  Future<void> _searchItems() async {
+    final searchText = _searchController.text;
+    if (searchText.isEmpty) {
+      _streamController.add([]);
+    } else {
+      final url = "http://10.10.10.136/web/search?search=$searchText";
+      Dio dio = Dio();
+      try {
+        var response = await dio.get(url);
+        log("[i] search ${response.data}");
+        print(globals.globalName);
+        Map map = response.data;
+        if (map['status']) {
+          final Map results = map['result'][0];
+          globals.globalName = results['name'].toString();
+          log(globals.globalName);
+          setState(() {});
+          // final List<Map<String, String>> items = results.map((item) {
+          //   return {
+          //     'name': item['name'].toString(),
+          //     'location': item['location'].toString(),
+          //   };
+          // }).toList();
+          // _streamController.add(items);
+        } else {
+          _streamController.add([]);
+        }
+      } catch (e) {
+        print(e);
+        _streamController.add([]);
       }
-    });
+    }
   }
 
   @override
@@ -78,18 +88,11 @@ class _HomeAppBarState extends State<HomeAppBar> {
                   decoration: BoxDecoration(
                     color: Colors.white,
                     boxShadow: const [
-                      BoxShadow(
-                        color: Colors.black26,
-                        blurRadius: 6,
-                      )
+                      BoxShadow(color: Colors.black26, blurRadius: 6)
                     ],
                     borderRadius: BorderRadius.circular(25),
                   ),
-                  child: Image.asset(
-                    'assets/T2.jpg',
-                    width: 30,
-                    height: 30,
-                  ),
+                  child: Image.asset('assets/T2.jpg', width: 30, height: 30),
                 ),
               ),
               const Spacer(),
@@ -106,28 +109,39 @@ class _HomeAppBarState extends State<HomeAppBar> {
                   decoration: BoxDecoration(
                     color: Colors.white,
                     boxShadow: const [
-                      BoxShadow(
-                        color: Colors.black26,
-                        blurRadius: 6,
-                      ),
+                      BoxShadow(color: Colors.black26, blurRadius: 6)
                     ],
                     borderRadius: BorderRadius.circular(25),
                   ),
                   child: const Icon(Icons.search, size: 28),
                 ),
-              )
+              ),
             ],
           ),
         ),
         Expanded(
-          child: ListView.builder(
-            itemCount: _filteredItems.length,
-            itemBuilder: (context, index) {
-              final item = _filteredItems[index];
-              return ListTile(
-                title: Text(item['name']!),
-                subtitle: Text(item['location']!),
-              );
+          child: StreamBuilder<List<Map<String, String>>>(
+            stream: _streamController.stream,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(child: CircularProgressIndicator());
+              } else if (snapshot.hasError) {
+                return Center(child: Text('Error: ${snapshot.error}'));
+              } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                return Center(child: Text('No results found.'));
+              } else {
+                final items = snapshot.data!;
+                return ListView.builder(
+                  itemCount: items.length,
+                  itemBuilder: (context, index) {
+                    final item = items[index];
+                    return ListTile(
+                      title: Text(item['name']!),
+                      subtitle: Text(item['location']!),
+                    );
+                  },
+                );
+              }
             },
           ),
         ),
@@ -138,38 +152,23 @@ class _HomeAppBarState extends State<HomeAppBar> {
   Widget _buildSearchField() {
     return Container(
       width: MediaQuery.of(context).size.width * 0.6,
-      // padding: const EdgeInsets.only(left: 12,),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(50),
-        boxShadow: const [
-          BoxShadow(
-            color: Colors.black26,
-            blurRadius: 6,
-          ),
-        ],
+        boxShadow: const [BoxShadow(color: Colors.black26, blurRadius: 6)],
       ),
       alignment: Alignment.center,
       child: TextField(
         controller: _searchController,
-        onChanged: (value) {
-          setState(() {
-            _searchText = value;
-          });
-          _searchItems();
-        },
         decoration: InputDecoration(
           contentPadding:
-          EdgeInsets.only(left: 35, bottom: 10, right: 10, top: 12),
+              EdgeInsets.only(left: 23, bottom: 10, right: 10, top: 12),
           hintText: 'Search...',
           border: InputBorder.none,
           suffixIcon: IconButton(
             icon: const Icon(Icons.clear),
             onPressed: () {
-              setState(() {
-                _searchController.clear();
-                _searchText = '';
-              });
+              _searchController.clear();
               _searchItems();
             },
           ),
@@ -186,10 +185,7 @@ class _HomeAppBarState extends State<HomeAppBar> {
         SizedBox(width: 8),
         Text(
           "Agartala Tripura, INDIA",
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.w500,
-          ),
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
         ),
       ],
     );

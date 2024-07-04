@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-class AccessTokens{
+class AccessTokens {
   static var authToken = '';
 }
 
@@ -32,7 +32,6 @@ class LoginResponseModel {
     mapOfBody['non_field_errors'];
     print(mapOfBody['key']);
 
-    // Create storage
     final storage = new FlutterSecureStorage();
     // Write value
     // storage.(key: 'Token', value: mapOfBody['key']); //////////////////////////////////////////////////////////////
@@ -46,8 +45,7 @@ class LoginResponseModel {
   }
 }
 
-class FlutterSecureStorage {
-}
+class FlutterSecureStorage {}
 
 class Data {
   Data({

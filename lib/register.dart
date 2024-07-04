@@ -21,16 +21,16 @@ class _MyRegisterState extends State<MyRegister> {
   TextEditingController confirmPassController = TextEditingController();
   bool _passwordVisible = true;
 
-  void registerUser(String name, String email, String mobile, String address,
-      String password, String confirmpassword) async {
-    String url = "http://10.10.10.132/web/users";
+  void registerUser(String name, String email, int mobile, String address,
+      String password, String confirmPassword) async {
+    String url = "http://10.10.10.136/web/sign-up";
     var body = {
       'name': name,
       'email': email,
       'mobile': mobile,
       'address': address,
       'password': password,
-      'confirm password': confirmpassword,
+      'confirmPassword': confirmPassword,
     };
 
     Dio dio = Dio();
@@ -72,25 +72,19 @@ class _MyRegisterState extends State<MyRegister> {
     return Scaffold(
       body: Stack(
         children: [
-          Container(
-            height: double.infinity,
-            width: double.infinity,
-            decoration: BoxDecoration(
-              gradient: LinearGradient(colors: [Colors.green.shade700,Colors.green.shade800,Colors.green.shade900]),
-            ),
-            child: const Padding(
-              padding: EdgeInsets.only(top: 100.0, left: 24),
-              child: Text(
-                'Create Your\nAccount',
-                style: TextStyle(
-                    fontSize: 40,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold),
-              ),
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            // bottom: 620,
+            child: Image.asset(
+              'assets/sepahijala-wild-life.jpg',
+              fit: BoxFit.cover,
+              height: 255,
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(top: 250.0),
+            padding: const EdgeInsets.only(top: 220.0),
             child: Container(
               decoration: const BoxDecoration(
                 borderRadius: BorderRadius.only(
@@ -118,7 +112,7 @@ class _MyRegisterState extends State<MyRegister> {
                             'Full Name',
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
-                              color: Colors.green.shade900,
+                              color: Colors.black,
                             ),
                           ),
                         ),
@@ -135,7 +129,7 @@ class _MyRegisterState extends State<MyRegister> {
                             'Gmail',
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
-                              color: Colors.green.shade900,
+                              color: Colors.black,
                             ),
                           ),
                         ),
@@ -153,7 +147,7 @@ class _MyRegisterState extends State<MyRegister> {
                             'Mobile',
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
-                              color: Colors.green.shade900,
+                              color: Colors.black,
                             ),
                           ),
                         ),
@@ -170,7 +164,7 @@ class _MyRegisterState extends State<MyRegister> {
                             'Address',
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
-                              color: Colors.green.shade900,
+                              color: Colors.black,
                             ),
                           ),
                         ),
@@ -197,7 +191,7 @@ class _MyRegisterState extends State<MyRegister> {
                             'Password',
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
-                              color: Colors.green.shade900,
+                              color: Colors.black,
                             ),
                           ),
                         ),
@@ -215,7 +209,7 @@ class _MyRegisterState extends State<MyRegister> {
                             'Confirm Password',
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
-                              color: Colors.green.shade900,
+                              color: Colors.black,
                             ),
                           ),
                         ),
@@ -227,7 +221,7 @@ class _MyRegisterState extends State<MyRegister> {
                             registerUser(
                               nameController.text.trim(),
                               emailController.text.trim(),
-                              mobileController.text.trim(),
+                              int.tryParse(mobileController.text.trim()) ?? 0,
                               addressController.text.trim(),
                               passController.text.trim(),
                               confirmPassController.text.trim(),
@@ -240,7 +234,11 @@ class _MyRegisterState extends State<MyRegister> {
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(30),
                             gradient: LinearGradient(
-                              colors: [Colors.green.shade700,Colors.green.shade800,Colors.green.shade900],
+                              colors: [
+                                Colors.black87,
+                                Colors.black,
+                                Colors.black
+                              ],
                             ),
                           ),
                           child: const Center(
