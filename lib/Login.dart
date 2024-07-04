@@ -1,4 +1,6 @@
 import 'dart:developer';
+import 'dart:ui';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:new_flutter_project/access_tokens.dart';
@@ -64,7 +66,7 @@ class _MyLoginState extends State<MyLogin> {
                             color: Colors.grey,
                           ),
                           label: Text(
-                            'Gmail',
+                            'Email',
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               color: Colors.black,
@@ -189,8 +191,7 @@ class _MyLoginState extends State<MyLogin> {
                     ],
                   ),
                 ),
-              )
-          )
+              ))
         ],
       ),
     );
@@ -466,7 +467,10 @@ class _OTPVerificationPageState extends State<OTPVerificationPage> {
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => NewPasswordPage(email: email)),
+              builder: (context) => NewPasswordPage(
+                    email: email,
+                    otp: otp,
+                  )),
         );
       } else {
         Fluttertoast.showToast(
@@ -487,21 +491,24 @@ class _OTPVerificationPageState extends State<OTPVerificationPage> {
 
 class NewPasswordPage extends StatefulWidget {
   final String email;
+  final String otp;
 
-  const NewPasswordPage({super.key, required this.email});
+  const NewPasswordPage({super.key, required this.email, required this.otp});
 
   @override
   State<NewPasswordPage> createState() => _NewPasswordPageState();
 }
 
 class _NewPasswordPageState extends State<NewPasswordPage> {
+  TextEditingController emailController = TextEditingController();
+  TextEditingController otpController = TextEditingController();
   TextEditingController newPasswordController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
-  TextEditingController otpController = TextEditingController();
   bool _passwordVisible = true;
 
   @override
   Widget build(BuildContext context) {
+    log("${widget.otp}");
     return Scaffold(
       body: Stack(
         children: [
@@ -509,7 +516,6 @@ class _NewPasswordPageState extends State<NewPasswordPage> {
             top: 0,
             left: 0,
             right: 0,
-            // bottom: 620,
             child: Image.asset(
               'assets/tegenungan-waterfall.jpg',
               fit: BoxFit.cover,
@@ -580,11 +586,11 @@ class _NewPasswordPageState extends State<NewPasswordPage> {
                     ElevatedButton(
                       onPressed: () {
                         resetPassword(
-                          widget.email,
-                          newPasswordController.text.trim(),
-                          confirmPasswordController.text.trim(),
-                          otpController.text
-                              .trim(), // Pass OTP to resetPassword
+                          email: widget.email,
+                          otp: widget.otp,
+                          newPassword: newPasswordController.text.trim(),
+                          confirmPassword:
+                              confirmPasswordController.text.trim(),
                         );
                       },
                       child: const Text('Reset Password'),
@@ -599,8 +605,12 @@ class _NewPasswordPageState extends State<NewPasswordPage> {
     );
   }
 
-  void resetPassword(String email, String newPassword, String confirmPassword,
-      String otp) async {
+  void resetPassword({
+    required String email,
+    required String otp,
+    required String newPassword,
+    required String confirmPassword,
+  }) async {
     if (newPassword != confirmPassword) {
       Fluttertoast.showToast(
         msg: "Passwords do not match.",
@@ -613,10 +623,11 @@ class _NewPasswordPageState extends State<NewPasswordPage> {
     String url = "http://10.10.10.136/web/reset";
     var body = {
       'email': email,
-      'password': newPassword,
-      'confirmPassword': confirmPassword,
       'otp': otp,
+      'newPassword': newPassword,
+      'confirmPassword': confirmPassword,
     };
+    log("$body");
     Dio dio = Dio();
 
     try {

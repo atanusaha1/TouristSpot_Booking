@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:new_flutter_project/welcomeScreen.dart';
-// import 'package:get/get.dart';
 import 'Login.dart';
 
 void main() {
@@ -82,7 +81,7 @@ class _MainPageState extends State<MainPage> {
       child: ListView(
         padding: EdgeInsets.zero,
         children: <Widget>[
-          DrawerHeader(
+          const DrawerHeader(
             decoration: const BoxDecoration(
               color: Colors.lightGreen,
             ),

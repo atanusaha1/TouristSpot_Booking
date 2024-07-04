@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:new_flutter_project/welcomeScreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'Login.dart';
 import 'Profile.dart';
@@ -48,7 +49,7 @@ class _MyDetailState extends State<MyDetail> {
     listOfAllSpots = widget.spot['images'];
     entryFee = Map<String, double>.from(widget.spot['entry_fee']);
     visitingHours = Map<String, String>.from(widget.spot['visiting_hours']);
-    log("$listOfAllSpots");
+    log(" spot details $listOfAllSpots");
 
     SharedPreferences.getInstance().then((prefs) {
       setState(() {
@@ -464,7 +465,7 @@ class _MyDetailState extends State<MyDetail> {
       log("[i] raw Rating response  ${response.data}");
       if (response.data['status']) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Review submitted!')),
+          const SnackBar(content: Text('Review submitted!')),
         );
         Navigator.of(context).pop();
       } else {
@@ -504,19 +505,20 @@ class _MyDetailState extends State<MyDetail> {
         child: ListView(
           padding: EdgeInsets.zero,
           children: <Widget>[
-            DrawerHeader(
+            const DrawerHeader(
               decoration: BoxDecoration(
                 color: Colors.lightGreen,
               ),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   CircleAvatar(
                     radius: 50,
                     backgroundColor: Colors.white,
                     child: CircleAvatar(
                       radius: 45,
-                      backgroundImage: AssetImage('assets/T2.jpg'),
+                      backgroundImage: AssetImage('assets/T2.jpg',
+                      ),
                     ),
                   ),
                   SizedBox(height: 10),
@@ -532,64 +534,64 @@ class _MyDetailState extends State<MyDetail> {
               ),
             ),
             ListTile(
-              leading: Icon(Icons.person, size: 30, color: Colors.lightGreen),
-              title: Text('Profile'),
+              leading: const Icon(Icons.person, size: 30, color: Colors.lightGreen),
+              title: const Text('Profile'),
               onTap: () {
                 Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => Profile()));
+                    MaterialPageRoute(builder: (context) => const Profile()));
               },
             ),
             ListTile(
-              leading: Icon(Icons.help, size: 30, color: Colors.lightGreen),
-              title: Text('FAQ & Help'),
+              leading: const Icon(Icons.help, size: 30, color: Colors.lightGreen),
+              title: const Text('FAQ & Help'),
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => FAQScreen()),
+                  MaterialPageRoute(builder: (context) => const FAQScreen()),
                 );
               },
             ),
             ListTile(
-              leading: Icon(Icons.policy, size: 30, color: Colors.lightGreen),
-              title: Text('Terms and Conditions'),
+              leading: const Icon(Icons.policy, size: 30, color: Colors.lightGreen),
+              title: const Text('Terms and Conditions'),
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => HelpScreen()),
+                  MaterialPageRoute(builder: (context) => const HelpScreen()),
                 );
               },
             ),
             ListTile(
               leading:
-                  Icon(Icons.contact_mail, size: 30, color: Colors.lightGreen),
-              title: Text('Contact Us'),
+                  const Icon(Icons.contact_mail, size: 30, color: Colors.lightGreen),
+              title: const Text('Contact Us'),
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => ContactUsScreen()),
+                  MaterialPageRoute(builder: (context) => const ContactUsScreen()),
                 );
               },
             ),
-            Divider(),
+            const Divider(),
             ListTile(
-              leading: Icon(Icons.bookmark, size: 30, color: Colors.lightGreen),
-              title: Text('Booking Status'),
+              leading: const Icon(Icons.bookmark, size: 30, color: Colors.lightGreen),
+              title: const Text('Booking Status'),
               onTap: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => BookingStatusScreen()),
+                      builder: (context) => const BookingStatusScreen()),
                 );
               },
             ),
-            Divider(),
+            const Divider(),
             ListTile(
-              leading: Icon(Icons.logout, size: 30, color: Colors.red),
-              title: Text('Log Out'),
+              leading: const Icon(Icons.logout, size: 30, color: Colors.red),
+              title: const Text('Log Out'),
               onTap: () {
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (context) => MyLogin()),
+                  MaterialPageRoute(builder: (context) => const WelcomeScreen()),
                 );
               },
             ),
@@ -693,7 +695,7 @@ class _MyDetailState extends State<MyDetail> {
                             listOfAllSpots![index]['link'] ?? '');
                       },
                       child: Container(
-                        margin: EdgeInsets.only(right: 8.0),
+                        margin: const EdgeInsets.only(right: 8.0),
                         decoration: BoxDecoration(
                           boxShadow: [
                             BoxShadow(
@@ -738,7 +740,7 @@ class _MyDetailState extends State<MyDetail> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
+                    const Text(
                       'Entry Fee',
                       style: TextStyle(
                         fontSize: 18,
@@ -846,7 +848,7 @@ class _MyDetailState extends State<MyDetail> {
             IconButton(
               onPressed: () {
                 Navigator.push(
-                    context, MaterialPageRoute(builder: (context) => myHome()));
+                    context, MaterialPageRoute(builder: (context) => const myHome()));
               },
               icon: const Icon(Icons.home, size: 30, color: Colors.lightGreen),
             ),
@@ -861,7 +863,7 @@ class _MyDetailState extends State<MyDetail> {
             IconButton(
               onPressed: () {
                 Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => Profile()));
+                    MaterialPageRoute(builder: (context) => const Profile()));
               },
               icon: const Icon(
                 Icons.person,

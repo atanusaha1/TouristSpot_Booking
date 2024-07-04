@@ -126,7 +126,7 @@ class _MyRegisterState extends State<MyRegister> {
                             color: Colors.grey,
                           ),
                           label: Text(
-                            'Gmail',
+                            'Email',
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               color: Colors.black,

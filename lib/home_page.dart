@@ -1,29 +1,72 @@
 import 'dart:developer';
-import 'package:new_flutter_project/Details.dart';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:new_flutter_project/reviews.dart';
+import 'package:new_flutter_project/welcomeScreen.dart';
+import 'Details.dart';
 import 'Profile.dart';
-import 'home_app_bar.dart';
 import 'globals.dart' as globals;
 
+// Booking model class
+class Booking {
+  final String id;
+  final String userId;
+  final String ticketId;
+  final String name;
+  final String spotName;
+  final double total;
+  final String date;
+  final String status;
+
+  Booking({
+    required this.id,
+    required this.userId,
+    required this.ticketId,
+    required this.name,
+    required this.spotName,
+    required this.total,
+    required this.date,
+    required this.status,
+  });
+
+  factory Booking.fromJson(Map<String, dynamic> json) {
+    return Booking(
+      id: json['_id'],
+      userId: json['userId'],
+      ticketId: json['ticketId'],
+      name: json['name'],
+      spotName: json['spot_name'],
+      total: json['total'].toDouble(),
+      date: json['date'],
+      status: json['status'],
+    );
+  }
+}
+
 class myHome extends StatefulWidget {
-  const myHome({super.key});
+  const myHome({Key? key}) : super(key: key);
 
   @override
   State<myHome> createState() => _myHomeState();
 }
 
 class _myHomeState extends State<myHome> {
-  List? listOfSpots = [];
+  List<dynamic>? listOfSpots = [];
+  bool isSearching = false;
+  TextEditingController searchController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     getTouristSpot();
+    searchController.addListener(searchSpots);
   }
 
-  int _currentIndex = 0;
+  @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,9 +76,80 @@ class _myHomeState extends State<myHome> {
         return exitApp;
       },
       child: Scaffold(
-        appBar: const PreferredSize(
-          preferredSize: Size.fromHeight(70),
-          child: HomeAppBar(),
+        appBar: PreferredSize(
+          preferredSize: const Size.fromHeight(70),
+          child: AppBar(
+            title: isSearching ? buildSearchField() : buildTitle(),
+            actions: [
+              IconButton(
+                icon: Icon(isSearching ? Icons.clear : Icons.search),
+                onPressed: () {
+                  setState(() {
+                    isSearching = !isSearching;
+                    if (!isSearching) {
+                      searchController.clear();
+                      getTouristSpot();
+                    }
+                  });
+                },
+              ),
+            ],
+          ),
+        ),
+        drawer: Drawer(
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: <Widget>[
+              const DrawerHeader(
+                decoration: BoxDecoration(
+                  color: Colors.lightGreen,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    CircleAvatar(
+                      radius: 50,
+                      backgroundColor: Colors.white,
+                      child: CircleAvatar(
+                        radius: 45,
+                        backgroundImage: AssetImage('assets/T2.jpg'),
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    Text(
+                      'Welcome Tourists',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              ListTile(
+                leading: const Icon(Icons.person,
+                    size: 30, color: Colors.lightGreen),
+                title: const Text('Profile'),
+                onTap: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => const Profile()));
+                },
+              ),
+              // Other ListTile items for menu options
+              const Divider(),
+              ListTile(
+                leading: const Icon(Icons.logout, size: 30, color: Colors.red),
+                title: const Text('Log Out'),
+                onTap: () {
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const WelcomeScreen()));
+                },
+              ),
+            ],
+          ),
         ),
         body: Padding(
           padding: const EdgeInsets.symmetric(vertical: 16),
@@ -43,9 +157,7 @@ class _myHomeState extends State<myHome> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               InkWell(
-                onTap: () {
-                  getTouristSpot();
-                },
+                onTap: getTouristSpot,
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: Row(
@@ -108,7 +220,7 @@ class _myHomeState extends State<myHome> {
                         );
                       },
                       child: Container(
-                        constraints: BoxConstraints(maxHeight: 290),
+                        constraints: const BoxConstraints(maxHeight: 290),
                         margin: const EdgeInsets.symmetric(
                             horizontal: 18, vertical: 8),
                         child: Card(
@@ -237,35 +349,44 @@ class _myHomeState extends State<myHome> {
         ),
         bottomNavigationBar: BottomAppBar(
           height: 70,
-          padding: EdgeInsets.only(top: 5),
+          padding: const EdgeInsets.only(top: 5),
           color: Colors.white,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               IconButton(
-                  onPressed: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => myHome()));
-                  },
-                  icon: const Icon(Icons.home,
-                      size: 30, color: Colors.lightGreen)),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const myHome()),
+                  );
+                },
+                icon:
+                    const Icon(Icons.home, size: 30, color: Colors.lightGreen),
+              ),
               IconButton(
-                  onPressed: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => Reviews()));
-                  },
-                  icon: const Icon(Icons.reviews,
-                      size: 30, color: Colors.lightGreen)),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Reviews()),
+                  );
+                },
+                icon: const Icon(Icons.reviews,
+                    size: 30, color: Colors.lightGreen),
+              ),
               IconButton(
-                  onPressed: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => Profile()));
-                  },
-                  icon: const Icon(
-                    Icons.person,
-                    size: 30,
-                    color: Colors.lightGreen,
-                  )),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const Profile()),
+                  );
+                },
+                icon: const Icon(
+                  Icons.person,
+                  size: 30,
+                  color: Colors.lightGreen,
+                ),
+              ),
             ],
           ),
         ),
@@ -273,21 +394,18 @@ class _myHomeState extends State<myHome> {
     );
   }
 
-  getTouristSpot() async {
+  Future<void> getTouristSpot() async {
     String url = "http://10.10.10.136/web/spots";
     Dio dio = Dio();
 
     listOfSpots = [];
     try {
       var response = await dio.get(url);
-      Map map = response.data;
-      // log('[i] TOURIST SPOT list $map');
+      Map<String, dynamic> map = response.data;
       if (map['status']) {
-        for (var spots in map['result']) {
-          // log('[i]$spots');
-          listOfSpots!.add(spots);
-        }
-        setState(() {});
+        setState(() {
+          listOfSpots = List.from(map['result']);
+        });
       } else {
         log('[e] Tourist Spot not found');
       }
@@ -296,12 +414,103 @@ class _myHomeState extends State<myHome> {
     }
   }
 
+  Future<void> searchSpots() async {
+    String searchText = searchController.text;
+    if (searchText.isEmpty) {
+      getTouristSpot();
+      return;
+    }
+
+    String url = "http://10.10.10.136/web/search?search=$searchText";
+    Dio dio = Dio();
+
+    listOfSpots = [];
+    try {
+      var response = await dio.get(url);
+      Map<String, dynamic> map = response.data;
+      if (map['status']) {
+        setState(() {
+          listOfSpots = List.from(map['result']);
+        });
+      } else {
+        log('[e] No spots found');
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Widget buildSearchField() {
+    return TextField(
+      controller: searchController,
+      decoration: InputDecoration(
+        hintText: 'Search...',
+        hintStyle: const TextStyle(color: Colors.black),
+        border: InputBorder.none,
+        filled: true,
+        fillColor: Colors.white.withOpacity(0.1),
+        contentPadding: const EdgeInsets.symmetric(vertical: 8.0),
+        prefixIcon: const Padding(
+          padding: EdgeInsets.only(
+              left: 8.0, right: 8.0), // Shifts the icon to the left
+          child: Icon(Icons.search, color: Colors.black),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderSide: const BorderSide(color: Colors.lightGreen),
+          borderRadius: BorderRadius.circular(30.0),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide: const BorderSide(color: Colors.lightGreen),
+          borderRadius: BorderRadius.circular(30.0),
+        ),
+      ),
+      style: const TextStyle(color: Colors.black),
+    );
+  }
+
+  Widget buildTitle() {
+    return const Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Icon(Icons.location_on, color: Color(0xFFF65959)),
+        SizedBox(width: 13),
+        Text.rich(
+          TextSpan(
+            style: TextStyle(
+                fontSize: 50,
+                fontWeight: FontWeight.w800,
+                fontFamily: 'Cursive'), // Applying cursive font
+            children: [
+              TextSpan(text: 'E', style: TextStyle(color: Colors.green)),
+              TextSpan(text: 'x', style: TextStyle(color: Colors.blue)),
+              TextSpan(text: 'p', style: TextStyle(color: Colors.purple)),
+              TextSpan(text: 'l', style: TextStyle(color: Colors.pink)),
+              TextSpan(text: 'o', style: TextStyle(color: Colors.red)),
+              TextSpan(text: 'r', style: TextStyle(color: Colors.orange)),
+              TextSpan(text: 'e', style: TextStyle(color: Colors.orangeAccent)),
+              TextSpan(
+                  text: ' ',
+                  style: TextStyle(color: Colors.black)), // Space between words
+              TextSpan(text: 'T', style: TextStyle(color: Colors.purple)),
+              TextSpan(text: 'r', style: TextStyle(color: Colors.pink)),
+              TextSpan(text: 'i', style: TextStyle(color: Colors.red)),
+              TextSpan(text: 'p', style: TextStyle(color: Colors.orange)),
+              TextSpan(text: 'u', style: TextStyle(color: Colors.pink)),
+              TextSpan(text: 'r', style: TextStyle(color: Colors.purple)),
+              TextSpan(text: 'a', style: TextStyle(color: Colors.red)),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
   Future<bool> showExitConfirmation(BuildContext context) async {
-    return await showDialog(
+    return (await showDialog(
           context: context,
           builder: (context) => AlertDialog(
             title: const Text('Exit App'),
-            content: const Text('Do you want to exit the app?'),
+            content: const Text('Are you sure you want to exit?'),
             actions: [
               TextButton(
                 onPressed: () => Navigator.of(context).pop(false),
@@ -313,7 +522,78 @@ class _myHomeState extends State<myHome> {
               ),
             ],
           ),
-        ) ??
+        )) ??
         false;
   }
 }
+
+class UpcomingBookingsPage extends StatefulWidget {
+  const UpcomingBookingsPage({Key? key}) : super(key: key);
+
+  @override
+  _UpcomingBookingsPageState createState() => _UpcomingBookingsPageState();
+}
+
+class _UpcomingBookingsPageState extends State<UpcomingBookingsPage> {
+  List<Booking> bookings = [];
+
+  @override
+  void initState() {
+    super.initState();
+    fetchUpcomingBookings();
+  }
+
+  Future<void> fetchUpcomingBookings() async {
+    String url = "http://10.10.10.136/web/booking?upcoming=true";
+    Dio dio = Dio();
+
+    try {
+      var response = await dio.get(url);
+      List<dynamic> data = response.data['result'];
+      setState(() {
+        bookings = data.map((json) => Booking.fromJson(json)).toList();
+      });
+    } catch (e) {
+      log('[e] Error fetching upcoming bookings: $e');
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Upcoming Bookings'),
+      ),
+      body: bookings.isEmpty
+          ? const Center(child: CircularProgressIndicator())
+          : ListView.builder(
+              itemCount: bookings.length,
+              itemBuilder: (context, index) {
+                Booking booking = bookings[index];
+                return Card(
+                  margin: const EdgeInsets.all(8.0),
+                  child: ListTile(
+                    title: Text(booking.spotName),
+                    subtitle: Text(
+                        'Date: ${booking.date}\nStatus: ${booking.status}\nTotal: ${booking.total}'),
+                  ),
+                );
+              },
+            ),
+    );
+  }
+}
+
+// class MyLogin extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: const Text('Login'),
+//       ),
+//       body: const Center(
+//         child: Text('Login Page'),
+//       ),
+//     );
+//   }
+// }

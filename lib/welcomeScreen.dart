@@ -46,7 +46,7 @@ class WelcomeScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const Text(
-                      'Welcome Back',
+                      'Welcome Tourists',
                       style: TextStyle(
                         fontSize: 30,
                         color: Colors.black,
