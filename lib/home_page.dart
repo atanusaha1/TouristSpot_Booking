@@ -212,19 +212,19 @@ class _myHomeState extends State<myHome> {
                       child: Chip(
                         label: Text('Gomati'),
                         backgroundColor: Colors.white10,
-                        shape: RoundedRectangleBorder(side: BorderSide(width: 0,color: Color(0xFFE385EF)), borderRadius: BorderRadius.all(Radius.circular(8))),
+                        shape: RoundedRectangleBorder(side: BorderSide(width: 0,color: Color(0xFF740682)), borderRadius: BorderRadius.all(Radius.circular(8))),
                         labelStyle: TextStyle(color: Colors.black),
                         avatar: CircleAvatar(
-                          backgroundImage: AssetImage('assets/99.jpg'),
+                          backgroundImage: AssetImage('assets/Tripura_Sundari_Temple,_Udaipur.jpg'),
                         ),
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 8.0),
+                      padding: EdgeInsets.symmetric(horizontal: 6.0),
                       child: Chip(
                         label: Text('West Tripura'),
                         backgroundColor: Colors.white10,
-                        shape: RoundedRectangleBorder(side: BorderSide(width: 0,color: Color(0xFFE385EF)), borderRadius: BorderRadius.all(Radius.circular(8))),
+                        shape: RoundedRectangleBorder(side: BorderSide(width: 0,color: Color(0xFF740682)), borderRadius: BorderRadius.all(Radius.circular(8))),
                         labelStyle: TextStyle(color: Colors.black),
                         avatar: CircleAvatar(
                           backgroundImage: AssetImage('assets/99.jpg'),
@@ -236,71 +236,71 @@ class _myHomeState extends State<myHome> {
                       child: Chip(
                         label: Text('Dhalai'),
                         backgroundColor: Colors.white10,
-                        shape: RoundedRectangleBorder(side: BorderSide(width: 0,color: Color(0xFFE385EF)), borderRadius: BorderRadius.all(Radius.circular(8))),
+                        shape: RoundedRectangleBorder(side: BorderSide(width: 0,color: Color(0xFF740682)), borderRadius: BorderRadius.all(Radius.circular(8))),
                         labelStyle: TextStyle(color: Colors.black),
                         avatar: CircleAvatar(
-                          backgroundImage: AssetImage('assets/99.jpg'),
+                          backgroundImage: AssetImage('assets/Dumboor.jpeg'),
                         ),
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 8.0),
+                      padding: EdgeInsets.symmetric(horizontal: 6.0),
                       child: Chip(
                         label: Text('North Tripura'),
                         backgroundColor: Colors.white10,
-                        shape:RoundedRectangleBorder(side: BorderSide(width: 0,color: Color(0xFFE385EF)), borderRadius: BorderRadius.all(Radius.circular(8))),
+                        shape:RoundedRectangleBorder(side: BorderSide(width: 0,color: Color(0xFF740682)), borderRadius: BorderRadius.all(Radius.circular(8))),
                         labelStyle: TextStyle(color: Colors.black),
                         avatar: CircleAvatar(
-                          backgroundImage: AssetImage('assets/99.jpg'),
+                          backgroundImage: AssetImage('assets/jampui.png'),
                         ),
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 8.0),
+                      padding: EdgeInsets.symmetric(horizontal: 6.0),
                       child: Chip(
                         label: Text('Shepahijala'),
                         backgroundColor: Colors.white10,
-                        shape:RoundedRectangleBorder(side: BorderSide(width: 0,color: Color(0xFFE385EF)), borderRadius: BorderRadius.all(Radius.circular(8))),
+                        shape:RoundedRectangleBorder(side: BorderSide(width: 0,color: Color(0xFF740682)), borderRadius: BorderRadius.all(Radius.circular(8))),
                         labelStyle: TextStyle(color: Colors.black),
                         avatar: CircleAvatar(
-                          backgroundImage: AssetImage('assets/99.jpg'),
+                          backgroundImage: AssetImage('assets/shepahijala.jpg'),
                         ),
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 8.0),
+                      padding: EdgeInsets.symmetric(horizontal: 6.0),
                       child: Chip(
                         label: Text('South Tripura'),
                         backgroundColor: Colors.white10,
-                        shape: RoundedRectangleBorder(side: BorderSide(width: 0,color: Color(0xFFE385EF)), borderRadius: BorderRadius.all(Radius.circular(8))),
+                        shape: RoundedRectangleBorder(side: BorderSide(width: 0,color: Color(0xFF740682)), borderRadius: BorderRadius.all(Radius.circular(8))),
                         labelStyle: TextStyle(color: Colors.black),
                         avatar: CircleAvatar(
-                          backgroundImage: AssetImage('assets/99.jpg'),
+                          backgroundImage: AssetImage('assets/pilak.jpeg'),
                         ),
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 8.0),
+                      padding: EdgeInsets.symmetric(horizontal: 6.0),
                       child: Chip(
                         label: Text('Unokoti'),
                         backgroundColor: Colors.white10,
-                        shape: RoundedRectangleBorder(side: BorderSide(width: 0,color: Color(0xFFE385EF)), borderRadius: BorderRadius.all(Radius.circular(8))),
+                        shape: RoundedRectangleBorder(side: BorderSide(width: 0,color: Color(0xFF740682)), borderRadius: BorderRadius.all(Radius.circular(8))),
                         labelStyle: TextStyle(color: Colors.black),
                         avatar: CircleAvatar(
-                          backgroundImage: AssetImage('assets/99.jpg'),
+                          backgroundImage: AssetImage('assets/unokoti.avif'),
                         ),
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 8.0),
+                      padding: EdgeInsets.symmetric(horizontal: 6.0),
                       child: Chip(
                         label: Text('Khowai'),
                         backgroundColor: Colors.white10,
                         shape: RoundedRectangleBorder(side: BorderSide(width: 0,color: Color(
-                            0xFFE385EF)), borderRadius: BorderRadius.all(Radius.circular(10))),
+                            0xFF740682)), borderRadius: BorderRadius.all(Radius.circular(10))),
                         labelStyle: TextStyle(color: Colors.black),
                         avatar: CircleAvatar(
-                          backgroundImage: AssetImage('assets/99.jpg'),
+                          backgroundImage: AssetImage('assets/Baramura.jpeg'),
                         ),
                       ),
                     ),
@@ -628,6 +628,7 @@ class _myHomeState extends State<myHome> {
           ),
         )) ??
         false;
+
   }
 }
 
