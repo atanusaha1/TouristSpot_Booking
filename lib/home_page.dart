@@ -1,8 +1,8 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
-import 'package:new_flutter_project/reviews.dart';
-import 'package:new_flutter_project/welcomeScreen.dart';
+import 'package:TouristSpot_Booking_System/reviews.dart';
+import 'package:TouristSpot_Booking_System/welcomeScreen.dart';
 import 'Details.dart';
 import 'Profile.dart';
 import 'globals.dart' as globals;
@@ -136,7 +136,53 @@ class _myHomeState extends State<myHome> {
                       MaterialPageRoute(builder: (context) => const Profile()));
                 },
               ),
-              // Other ListTile items for menu options
+              ListTile(
+                leading:
+                    const Icon(Icons.help, size: 30, color: Colors.lightGreen),
+                title: const Text('FAQ & Help'),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const FAQScreen()),
+                  );
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.policy,
+                    size: 30, color: Colors.lightGreen),
+                title: const Text('Terms and Conditions'),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const HelpScreen()),
+                  );
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.contact_mail,
+                    size: 30, color: Colors.lightGreen),
+                title: const Text('Contact Us'),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const ContactUsScreen()),
+                  );
+                },
+              ),
+              const Divider(),
+              ListTile(
+                leading: const Icon(Icons.bookmark,
+                    size: 30, color: Colors.lightGreen),
+                title: const Text('Booking Status'),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const BookingStatusScreen()),
+                  );
+                },
+              ),
               const Divider(),
               ListTile(
                 leading: const Icon(Icons.logout, size: 30, color: Colors.red),
@@ -152,58 +198,116 @@ class _myHomeState extends State<myHome> {
           ),
         ),
         body: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 16),
+          padding: const EdgeInsets.only(left: 3.0, right: 3.0, bottom: 3.0, top: 3.0),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              InkWell(
-                onTap: getTouristSpot,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: Row(
-                    children: [
-                      Container(
-                        decoration: const BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.topLeft,
-                            end: Alignment(0.8, 1),
-                            colors: <Color>[
-                              Color(0xff1f005c),
-                              Color(0xff5b0060),
-                              Color(0xff870160),
-                              Color(0xffac255e),
-                              Color(0xffca485c),
-                              Color(0xffe16b5c),
-                              Color(0xfff39060),
-                              Color(0xffffb56b),
-                            ],
-                          ),
-                          borderRadius: BorderRadius.all(Radius.circular(22)),
-                        ),
-                        padding: const EdgeInsets.all(12.0),
-                        child: const Text(
-                          'Welcome Tourist',
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
+              const SizedBox(height: 10),
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: const [
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 8.0),
+                      child: Chip(
+                        label: Text('Gomati'),
+                        backgroundColor: Colors.white10,
+                        shape: RoundedRectangleBorder(side: BorderSide(width: 0,color: Color(0xFFE385EF)), borderRadius: BorderRadius.all(Radius.circular(8))),
+                        labelStyle: TextStyle(color: Colors.black),
+                        avatar: CircleAvatar(
+                          backgroundImage: AssetImage('assets/99.jpg'),
                         ),
                       ),
-                      const SizedBox(width: 16),
-                      const Text(
-                        'Please Select\nYour Favourite Destination.....',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.brown,
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 8.0),
+                      child: Chip(
+                        label: Text('West Tripura'),
+                        backgroundColor: Colors.white10,
+                        shape: RoundedRectangleBorder(side: BorderSide(width: 0,color: Color(0xFFE385EF)), borderRadius: BorderRadius.all(Radius.circular(8))),
+                        labelStyle: TextStyle(color: Colors.black),
+                        avatar: CircleAvatar(
+                          backgroundImage: AssetImage('assets/99.jpg'),
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 8.0),
+                      child: Chip(
+                        label: Text('Dhalai'),
+                        backgroundColor: Colors.white10,
+                        shape: RoundedRectangleBorder(side: BorderSide(width: 0,color: Color(0xFFE385EF)), borderRadius: BorderRadius.all(Radius.circular(8))),
+                        labelStyle: TextStyle(color: Colors.black),
+                        avatar: CircleAvatar(
+                          backgroundImage: AssetImage('assets/99.jpg'),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 8.0),
+                      child: Chip(
+                        label: Text('North Tripura'),
+                        backgroundColor: Colors.white10,
+                        shape:RoundedRectangleBorder(side: BorderSide(width: 0,color: Color(0xFFE385EF)), borderRadius: BorderRadius.all(Radius.circular(8))),
+                        labelStyle: TextStyle(color: Colors.black),
+                        avatar: CircleAvatar(
+                          backgroundImage: AssetImage('assets/99.jpg'),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 8.0),
+                      child: Chip(
+                        label: Text('Shepahijala'),
+                        backgroundColor: Colors.white10,
+                        shape:RoundedRectangleBorder(side: BorderSide(width: 0,color: Color(0xFFE385EF)), borderRadius: BorderRadius.all(Radius.circular(8))),
+                        labelStyle: TextStyle(color: Colors.black),
+                        avatar: CircleAvatar(
+                          backgroundImage: AssetImage('assets/99.jpg'),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 8.0),
+                      child: Chip(
+                        label: Text('South Tripura'),
+                        backgroundColor: Colors.white10,
+                        shape: RoundedRectangleBorder(side: BorderSide(width: 0,color: Color(0xFFE385EF)), borderRadius: BorderRadius.all(Radius.circular(8))),
+                        labelStyle: TextStyle(color: Colors.black),
+                        avatar: CircleAvatar(
+                          backgroundImage: AssetImage('assets/99.jpg'),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 8.0),
+                      child: Chip(
+                        label: Text('Unokoti'),
+                        backgroundColor: Colors.white10,
+                        shape: RoundedRectangleBorder(side: BorderSide(width: 0,color: Color(0xFFE385EF)), borderRadius: BorderRadius.all(Radius.circular(8))),
+                        labelStyle: TextStyle(color: Colors.black),
+                        avatar: CircleAvatar(
+                          backgroundImage: AssetImage('assets/99.jpg'),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 8.0),
+                      child: Chip(
+                        label: Text('Khowai'),
+                        backgroundColor: Colors.white10,
+                        shape: RoundedRectangleBorder(side: BorderSide(width: 0,color: Color(
+                            0xFFE385EF)), borderRadius: BorderRadius.all(Radius.circular(10))),
+                        labelStyle: TextStyle(color: Colors.black),
+                        avatar: CircleAvatar(
+                          backgroundImage: AssetImage('assets/99.jpg'),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              const SizedBox(height: 4),
+              const SizedBox(height: 10),
               Expanded(
                 child: ListView.builder(
                   itemCount: listOfSpots!.length,
@@ -583,17 +687,3 @@ class _UpcomingBookingsPageState extends State<UpcomingBookingsPage> {
     );
   }
 }
-
-// class MyLogin extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: const Text('Login'),
-//       ),
-//       body: const Center(
-//         child: Text('Login Page'),
-//       ),
-//     );
-//   }
-// }

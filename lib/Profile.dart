@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_navigation/src/root/get_material_app.dart';
-import 'package:new_flutter_project/welcomeScreen.dart';
+import 'package:TouristSpot_Booking_System/welcomeScreen.dart';
 import 'Login.dart';
 
 void main() {
@@ -452,7 +450,7 @@ class HelpScreen extends StatelessWidget {
         title: const Text('Terms and Conditions'),
       ),
       body: Padding(
-        padding: EdgeInsets.all(20),
+        padding: EdgeInsets.all(50),
         child: ListView(
           children: [
             Text(
@@ -618,45 +616,119 @@ class BookingStatusScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
-        title: const Text('Booking Status',
-            style: TextStyle(color: Colors.lightGreen)),
+        title: const Text('Booking Status', style: TextStyle(color: Colors.lightGreen)),
         iconTheme: const IconThemeData(color: Colors.black),
       ),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          _buildStatusItem('Upcoming', 'Details about upcoming booking'),
+          _buildStatusItem(context, 'Upcoming', 'Details about upcoming booking', () {
+            Navigator.push(context, MaterialPageRoute(builder: (context) => UpcomingBookingScreen()));
+          }),
           _buildDivider(),
-          _buildStatusItem('Check-in', 'Details about check-in process'),
+          _buildStatusItem(context, 'Check-in', 'Details about check-in process', () {
+            Navigator.push(context, MaterialPageRoute(builder: (context) => CheckInScreen()));
+          }),
           _buildDivider(),
-          _buildStatusItem('Check-out', 'Details about check-out process'),
+          _buildStatusItem(context, 'Check-out', 'Details about check-out process', () {
+            Navigator.push(context, MaterialPageRoute(builder: (context) => CheckOutScreen()));
+          }),
           _buildDivider(),
-          _buildStatusItem(
-              'Cancel Booking', 'Details about booking cancellation'),
+          _buildStatusItem(context, 'Cancel Booking', 'Details about booking cancellation', () {
+            showCancelBookingDialog(context);
+          }),
         ],
       ),
     );
   }
 
-  Widget _buildStatusItem(String title, String description) {
+  Widget _buildStatusItem(BuildContext context, String title, String description, VoidCallback onTap) {
     return ListTile(
-      title: Text(title,
-          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+      title: Text(
+        title,
+        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+      ),
       subtitle: Text(description),
       trailing: Icon(Icons.arrow_forward, color: Colors.grey),
-      onTap: () {
-        // Handle item tap if needed
-      },
+      onTap: onTap,
     );
   }
 
   Widget _buildDivider() {
     return Divider(
-      color: Colors.grey.shade300,
+      color: Colors.grey,
+      height: 20,
       thickness: 1,
-      height: 32,
       indent: 16,
       endIndent: 16,
+    );
+  }
+
+  void showCancelBookingDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Cancel Booking'),
+        content: Text('Are you sure you want to cancel this booking?'),
+        actions: [
+          TextButton(
+            onPressed: () {
+              // Implement cancellation logic
+              Navigator.pop(context); // Close the dialog
+            },
+            child: Text('Yes'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context); // Close the dialog
+            },
+            child: Text('No'),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// Example screens for navigation
+class UpcomingBookingScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Upcoming Booking'),
+      ),
+      body: Center(
+        child: Text('Upcoming Booking Details'),
+      ),
+    );
+  }
+}
+
+class CheckInScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Check-in'),
+      ),
+      body: Center(
+        child: Text('Check-in Details'),
+      ),
+    );
+  }
+}
+
+class CheckOutScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Check-out'),
+      ),
+      body: Center(
+        child: Text('Check-out Details'),
+      ),
     );
   }
 }

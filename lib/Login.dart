@@ -1,10 +1,8 @@
 import 'dart:developer';
-import 'dart:ui';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:new_flutter_project/access_tokens.dart';
-import 'package:new_flutter_project/register.dart';
+import 'package:TouristSpot_Booking_System/access_tokens.dart';
+import 'package:TouristSpot_Booking_System/register.dart';
 import 'package:dio/dio.dart';
 import 'home_page.dart';
 

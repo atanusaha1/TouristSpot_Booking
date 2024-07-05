@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:new_flutter_project/register.dart';
+import 'package:TouristSpot_Booking_System/register.dart';
 import 'Login.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 

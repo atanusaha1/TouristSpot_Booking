@@ -3,9 +3,8 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:new_flutter_project/welcomeScreen.dart';
+import 'package:TouristSpot_Booking_System/welcomeScreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'Login.dart';
 import 'Profile.dart';
 import 'home_page.dart';
 import 'access_tokens.dart';
@@ -517,7 +516,8 @@ class _MyDetailState extends State<MyDetail> {
                     backgroundColor: Colors.white,
                     child: CircleAvatar(
                       radius: 45,
-                      backgroundImage: AssetImage('assets/T2.jpg',
+                      backgroundImage: AssetImage(
+                        'assets/T2.jpg',
                       ),
                     ),
                   ),
@@ -534,7 +534,8 @@ class _MyDetailState extends State<MyDetail> {
               ),
             ),
             ListTile(
-              leading: const Icon(Icons.person, size: 30, color: Colors.lightGreen),
+              leading:
+                  const Icon(Icons.person, size: 30, color: Colors.lightGreen),
               title: const Text('Profile'),
               onTap: () {
                 Navigator.push(context,
@@ -542,7 +543,8 @@ class _MyDetailState extends State<MyDetail> {
               },
             ),
             ListTile(
-              leading: const Icon(Icons.help, size: 30, color: Colors.lightGreen),
+              leading:
+                  const Icon(Icons.help, size: 30, color: Colors.lightGreen),
               title: const Text('FAQ & Help'),
               onTap: () {
                 Navigator.push(
@@ -552,7 +554,8 @@ class _MyDetailState extends State<MyDetail> {
               },
             ),
             ListTile(
-              leading: const Icon(Icons.policy, size: 30, color: Colors.lightGreen),
+              leading:
+                  const Icon(Icons.policy, size: 30, color: Colors.lightGreen),
               title: const Text('Terms and Conditions'),
               onTap: () {
                 Navigator.push(
@@ -562,19 +565,21 @@ class _MyDetailState extends State<MyDetail> {
               },
             ),
             ListTile(
-              leading:
-                  const Icon(Icons.contact_mail, size: 30, color: Colors.lightGreen),
+              leading: const Icon(Icons.contact_mail,
+                  size: 30, color: Colors.lightGreen),
               title: const Text('Contact Us'),
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const ContactUsScreen()),
+                  MaterialPageRoute(
+                      builder: (context) => const ContactUsScreen()),
                 );
               },
             ),
             const Divider(),
             ListTile(
-              leading: const Icon(Icons.bookmark, size: 30, color: Colors.lightGreen),
+              leading: const Icon(Icons.bookmark,
+                  size: 30, color: Colors.lightGreen),
               title: const Text('Booking Status'),
               onTap: () {
                 Navigator.push(
@@ -591,7 +596,8 @@ class _MyDetailState extends State<MyDetail> {
               onTap: () {
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (context) => const WelcomeScreen()),
+                  MaterialPageRoute(
+                      builder: (context) => const WelcomeScreen()),
                 );
               },
             ),
@@ -847,8 +853,8 @@ class _MyDetailState extends State<MyDetail> {
           children: [
             IconButton(
               onPressed: () {
-                Navigator.push(
-                    context, MaterialPageRoute(builder: (context) => const myHome()));
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => const myHome()));
               },
               icon: const Icon(Icons.home, size: 30, color: Colors.lightGreen),
             ),
