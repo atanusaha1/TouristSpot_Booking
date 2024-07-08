@@ -1,7 +1,10 @@
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'dart:convert';
+import 'dart:developer';
 import 'package:TouristSpot_Booking_System/welcomeScreen.dart';
-import 'Login.dart';
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
+import 'access_tokens.dart';
 
 void main() {
   runApp(const MyApp());
@@ -12,13 +15,43 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
+    return MaterialApp(
       title: 'Tourist App',
       theme: ThemeData(
         primarySwatch: Colors.lightGreen,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: const MainPage(),
+    );
+  }
+}
+
+class BookingDetails {
+  final String name;
+  final String spotName;
+  final String ticketId;
+  final double total;
+  final DateTime date;
+  final String status;
+
+  BookingDetails({
+    required this.name,
+    required this.spotName,
+    required this.ticketId,
+    required this.total,
+    required this.date,
+    required this.status,
+  });
+
+  factory BookingDetails.fromJson(Map<String, dynamic> json) {
+    return BookingDetails(
+      name: json['name'] ?? '',
+      spotName: json['spot_name'] ?? '',
+      ticketId: json['ticketId'] ?? '',
+      total:
+          json['total'] != null ? double.parse(json['total'].toString()) : 0.0,
+      date: DateTime.tryParse(json['date']) ?? DateTime.now(),
+      status: json['status'] ?? '',
     );
   }
 }
@@ -35,7 +68,11 @@ class _MainPageState extends State<MainPage> {
 
   static const List<Widget> _pages = <Widget>[
     Profile(),
+    FAQScreen(),
+    HelpScreen(),
+    ContactUsScreen(),
   ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -69,7 +106,11 @@ class _MainPageState extends State<MainPage> {
         currentIndex: _selectedIndex,
         selectedItemColor: Colors.lightGreen,
         unselectedItemColor: Colors.grey,
-        // onTap: _onItemTapped,
+        onTap: (index) {
+          setState(() {
+            _selectedIndex = index;
+          });
+        },
       ),
     );
   }
@@ -80,13 +121,13 @@ class _MainPageState extends State<MainPage> {
         padding: EdgeInsets.zero,
         children: <Widget>[
           const DrawerHeader(
-            decoration: const BoxDecoration(
+            decoration: BoxDecoration(
               color: Colors.lightGreen,
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const CircleAvatar(
+                CircleAvatar(
                   radius: 30,
                   backgroundColor: Colors.white,
                   child: CircleAvatar(
@@ -118,18 +159,28 @@ class _MainPageState extends State<MainPage> {
           }),
           _buildDrawerItem('FAQ & Help', Icons.question_answer_outlined, () {
             Navigator.pop(context);
-            MaterialPageRoute(builder: (context) => const FAQScreen());
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const FAQScreen()),
+            );
           }),
           _buildDrawerItem('Terms and Conditions', Icons.help_outline, () {
             Navigator.pop(context);
-            MaterialPageRoute(builder: (context) => const HelpScreen());
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const HelpScreen()),
+            );
           }),
           _buildDrawerItem('Contact Us', Icons.contact_mail_outlined, () {
             Navigator.pop(context);
-            MaterialPageRoute(builder: (context) => const ContactUsScreen());
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const ContactUsScreen()),
+            );
           }),
           const Divider(),
           _buildDrawerItem('Booking Status', Icons.book_online_outlined, () {
+            Navigator.pop(context);
             Navigator.push(
               context,
               MaterialPageRoute(
@@ -138,9 +189,9 @@ class _MainPageState extends State<MainPage> {
           }),
           const Divider(),
           _buildDrawerItem('Log Out', Icons.logout, () {
-            Navigator.push(
+            Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => const MyLogin()),
+              MaterialPageRoute(builder: (context) => const WelcomeScreen()),
             );
           }, textColor: Colors.red),
         ],
@@ -178,7 +229,7 @@ class Profile extends StatelessWidget {
         child: ListView(
           children: [
             const SizedBox(height: 20),
-            const Align(
+            Align(
               alignment: Alignment.topCenter,
               child: CircleAvatar(
                 radius: 50,
@@ -281,7 +332,10 @@ class Profile extends StatelessWidget {
       child: Text(
         title,
         style: const TextStyle(
-            color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold),
+          color: Colors.black,
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+        ),
       ),
     );
   }
@@ -359,14 +413,11 @@ class _DialogBoxState extends State<DialogBox> {
                 String email = emailController.text;
                 String mobile = mobileController.text;
                 String address = addressController.text;
-                Get.back();
+                Navigator.of(context).pop();
                 // Navigate back to Profile screen
-                Get.offAll(const Profile());
+                // Handle updating logic here
               },
               child: const Text('Update'),
-              style: ElevatedButton.styleFrom(
-                iconColor: Colors.lightGreen,
-              ),
             ),
           ],
         ),
@@ -377,16 +428,14 @@ class _DialogBoxState extends State<DialogBox> {
   Widget _buildTextField({
     required TextEditingController controller,
     required String labelText,
-    bool obscureText = false,
   }) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
-      child: TextField(
+      padding: const EdgeInsets.all(8.0),
+      child: TextFormField(
         controller: controller,
-        obscureText: obscureText,
         decoration: InputDecoration(
           labelText: labelText,
-          border: const OutlineInputBorder(),
+          border: OutlineInputBorder(),
         ),
       ),
     );
@@ -400,42 +449,17 @@ class FAQScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('FAQ & Help'),
+        backgroundColor: Colors.white,
+        title: const Text('FAQ & Help',
+            style: TextStyle(color: Colors.lightGreen)),
+        iconTheme: const IconThemeData(color: Colors.black),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(20),
-        child: ListView(
-          children: [
-            const SizedBox(height: 30),
-            const Text(
-              'FAQ & Help',
-              style: TextStyle(color: Colors.black, fontSize: 20),
-            ),
-            const SizedBox(height: 20),
-            _buildFAQItem('How to book a ticket?',
-                'To book a ticket, navigate to the "Booking" page and follow the instructions provided.'),
-            _buildFAQItem('Can I cancel my booking?',
-                'Yes, you can cancel your booking from the "Booking Status" page.'),
-          ],
+      body: Center(
+        child: const Text(
+          'FAQs and Help Content',
+          style: TextStyle(fontSize: 20),
         ),
       ),
-    );
-  }
-
-  Widget _buildFAQItem(String question, String answer) {
-    return ExpansionTile(
-      title: Text(
-        question,
-        style: const TextStyle(color: Colors.black, fontSize: 16),
-      ),
-      children: [
-        ListTile(
-          title: Text(
-            answer,
-            style: const TextStyle(color: Colors.black, fontSize: 14),
-          ),
-        ),
-      ],
     );
   }
 }
@@ -581,25 +605,190 @@ class ContactUsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Contact Us'),
+        backgroundColor: Colors.white,
+        title: const Text('Contact Us',
+            style: TextStyle(color: Colors.lightGreen)),
+        iconTheme: const IconThemeData(color: Colors.black),
       ),
-      body: Padding(
-        padding: EdgeInsets.all(20),
-        child: ListView(
+      body: Center(
+        child: const Text(
+          'Contact Us Content',
+          style: TextStyle(fontSize: 20),
+        ),
+      ),
+    );
+  }
+}
+
+class BookingStatusScreen extends StatefulWidget {
+  const BookingStatusScreen({Key? key}) : super(key: key);
+
+  @override
+  _BookingStatusScreenState createState() => _BookingStatusScreenState();
+}
+
+class _BookingStatusScreenState extends State<BookingStatusScreen> {
+  late Future<List<BookingDetails>> _futureBookings;
+
+  @override
+  void initState() {
+    super.initState();
+    _futureBookings =
+        fetchBookings('bookingId', 'userId'); // Replace with actual ids
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        title: const Text('Booking Status',
+            style: TextStyle(color: Colors.lightGreen)),
+        iconTheme: const IconThemeData(color: Colors.black),
+      ),
+      body: FutureBuilder<List<BookingDetails>>(
+        future: _futureBookings,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            List<BookingDetails> bookings = snapshot.data!;
+            return ListView.builder(
+              itemCount: bookings.length,
+              itemBuilder: (context, index) {
+                return _buildBookingCard(context, bookings[index]);
+              },
+            );
+          } else if (snapshot.hasError) {
+            return Center(
+              child: Text('Error: ${snapshot.error}'),
+            );
+          } else {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+        },
+      ),
+    );
+  }
+
+  Widget _buildBookingCard(BuildContext context, BookingDetails booking) {
+    return Card(
+      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+      elevation: 4,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'Contact Us',
-              style: TextStyle(color: Colors.black, fontSize: 20),
+            // Ticket header with subtle background color
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.blueGrey[50],
+                borderRadius: BorderRadius.circular(5),
+              ),
+              padding: const EdgeInsets.all(8),
+              child: Text(
+                'Ticket Details',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.blueGrey[800],
+                ),
+              ),
             ),
-            SizedBox(height: 30),
-            Text(
-              'Email: jagritipal19@gmail.com',
-              style: TextStyle(color: Colors.black, fontSize: 16),
+            SizedBox(height: 12),
+            // Row to display the name and spot name
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Name: ${booking.name}',
+                  style: TextStyle(fontSize: 16),
+                ),
+                Text(
+                  'Spot Name: ${booking.spotName}',
+                  style: TextStyle(fontSize: 16),
+                ),
+              ],
             ),
-            SizedBox(height: 20),
-            Text(
-              'Phone: 8787338323',
-              style: TextStyle(color: Colors.black, fontSize: 16),
+            SizedBox(height: 8),
+            // Divider line
+            Divider(color: Colors.grey[300]),
+            SizedBox(height: 8),
+            // Row to display the ticket ID and total
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Ticket ID: ${booking.ticketId}',
+                  style: TextStyle(fontSize: 16),
+                ),
+                Text(
+                  'Total: ${booking.total.toStringAsFixed(2)}',
+                  style: TextStyle(fontSize: 16, color: Colors.green[700]),
+                ),
+              ],
+            ),
+            SizedBox(height: 8),
+            // Divider line
+            Divider(color: Colors.grey[300]),
+            SizedBox(height: 8),
+            // Display the date and status with icons
+            Row(
+              children: [
+                Icon(Icons.date_range, color: Colors.blueGrey, size: 20),
+                SizedBox(width: 8),
+                Text(
+                  'Date: ${DateFormat('MM/dd/yyyy').format(booking.date)}',
+                  style: TextStyle(fontSize: 16),
+                ),
+              ],
+            ),
+            SizedBox(height: 8),
+            Row(
+              children: [
+                Icon(Icons.info, color: Colors.blueGrey, size: 20),
+                SizedBox(width: 8),
+                Text(
+                  'Status: ${booking.status}',
+                  style: TextStyle(fontSize: 16, color: Colors.orange[500]),
+                ),
+              ],
+            ),
+            SizedBox(height: 16),
+            // Download and Cancel buttons
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                TextButton.icon(
+                  icon: Icon(Icons.download, color: Colors.black),
+                  label: Text('Download'),
+                  onPressed: () {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Downloading ticket for ${booking.name}'),
+                        duration: Duration(seconds: 2),
+                      ),
+                    );
+                  },
+                ),
+                SizedBox(width: 160),
+                TextButton.icon(
+                  icon: Icon(Icons.cancel, color: Colors.red[500]),
+                  label: Text('Cancel'),
+                  onPressed: () {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Cancelling ticket for ${booking.name}'),
+                        duration: Duration(seconds: 2),
+                      ),
+                    );
+                  },
+                ),
+              ],
             ),
           ],
         ),
@@ -608,127 +797,74 @@ class ContactUsScreen extends StatelessWidget {
   }
 }
 
-class BookingStatusScreen extends StatelessWidget {
-  const BookingStatusScreen({Key? key}) : super(key: key);
+class UpcomingBookingScreen extends StatelessWidget {
+  final List<BookingDetails> bookings;
+
+  const UpcomingBookingScreen({Key? key, required this.bookings})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
-        title: const Text('Booking Status', style: TextStyle(color: Colors.lightGreen)),
+        title: const Text('Upcoming Bookings',
+            style: TextStyle(color: Colors.lightGreen)),
         iconTheme: const IconThemeData(color: Colors.black),
       ),
-      body: ListView(
-        padding: const EdgeInsets.all(16),
-        children: [
-          _buildStatusItem(context, 'Upcoming', 'Details about upcoming booking', () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => UpcomingBookingScreen()));
-          }),
-          _buildDivider(),
-          _buildStatusItem(context, 'Check-in', 'Details about check-in process', () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => CheckInScreen()));
-          }),
-          _buildDivider(),
-          _buildStatusItem(context, 'Check-out', 'Details about check-out process', () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => CheckOutScreen()));
-          }),
-          _buildDivider(),
-          _buildStatusItem(context, 'Cancel Booking', 'Details about booking cancellation', () {
-            showCancelBookingDialog(context);
-          }),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildStatusItem(BuildContext context, String title, String description, VoidCallback onTap) {
-    return ListTile(
-      title: Text(
-        title,
-        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-      ),
-      subtitle: Text(description),
-      trailing: Icon(Icons.arrow_forward, color: Colors.grey),
-      onTap: onTap,
-    );
-  }
-
-  Widget _buildDivider() {
-    return Divider(
-      color: Colors.grey,
-      height: 20,
-      thickness: 1,
-      indent: 16,
-      endIndent: 16,
-    );
-  }
-
-  void showCancelBookingDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text('Cancel Booking'),
-        content: Text('Are you sure you want to cancel this booking?'),
-        actions: [
-          TextButton(
-            onPressed: () {
-              // Implement cancellation logic
-              Navigator.pop(context); // Close the dialog
-            },
-            child: Text('Yes'),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context); // Close the dialog
-            },
-            child: Text('No'),
-          ),
-        ],
+      body: ListView.builder(
+        itemCount: bookings.length,
+        itemBuilder: (context, index) {
+          final booking = bookings[index];
+          return Card(
+            margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Name: ${booking.name}'),
+                  Text('Spot Name: ${booking.spotName}'),
+                  Text('Ticket ID: ${booking.ticketId}'),
+                  Text('Total: ${booking.total.toStringAsFixed(2)}'),
+                  Text(
+                      'Date: ${DateFormat('MM/dd/yyyy').format(booking.date)}'),
+                  Text('Status: ${booking.status}'),
+                ],
+              ),
+            ),
+          );
+        },
       ),
     );
   }
 }
 
-// Example screens for navigation
-class UpcomingBookingScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Upcoming Booking'),
-      ),
-      body: Center(
-        child: Text('Upcoming Booking Details'),
-      ),
-    );
-  }
-}
+// Function to fetch bookings from API
+Future<List<BookingDetails>> fetchBookings(
+    String bookingId, String userId) async {
+  String url =
+      'http://10.10.10.136/web/upcoming?bookingId=$bookingId&userId=$userId';
 
-class CheckInScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Check-in'),
-      ),
-      body: Center(
-        child: Text('Check-in Details'),
-      ),
+  try {
+    var response = await http.get(
+      Uri.parse(url),
+      headers: {
+        "Authorization": "Bearer ${AccessTokens.authToken}",
+        "Content-Type": "application/json",
+      },
     );
-  }
-}
 
-class CheckOutScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Check-out'),
-      ),
-      body: Center(
-        child: Text('Check-out Details'),
-      ),
-    );
+    if (response.statusCode == 200) {
+      final List<dynamic> jsonData = json.decode(response.body)['result'];
+      List<BookingDetails> bookings =
+          jsonData.map((item) => BookingDetails.fromJson(item)).toList();
+      return bookings;
+    } else {
+      throw Exception('Failed to load bookings');
+    }
+  } catch (e) {
+    log('Error fetching bookings: $e');
+    throw Exception('Failed to load bookings');
   }
 }

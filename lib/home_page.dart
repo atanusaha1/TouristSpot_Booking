@@ -2,8 +2,8 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:TouristSpot_Booking_System/reviews.dart';
-import 'package:TouristSpot_Booking_System/welcomeScreen.dart';
 import 'Details.dart';
+import 'Login.dart';
 import 'Profile.dart';
 import 'globals.dart' as globals;
 
@@ -188,17 +188,16 @@ class _myHomeState extends State<myHome> {
                 leading: const Icon(Icons.logout, size: 30, color: Colors.red),
                 title: const Text('Log Out'),
                 onTap: () {
-                  Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const WelcomeScreen()));
+                  Navigator.pushReplacement(context,
+                      MaterialPageRoute(builder: (context) => const MyLogin()));
                 },
               ),
             ],
           ),
         ),
         body: Padding(
-          padding: const EdgeInsets.only(left: 3.0, right: 3.0, bottom: 3.0, top: 3.0),
+          padding: const EdgeInsets.only(
+              left: 3.0, right: 3.0, bottom: 3.0, top: 3.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
@@ -212,10 +211,14 @@ class _myHomeState extends State<myHome> {
                       child: Chip(
                         label: Text('Gomati'),
                         backgroundColor: Colors.white10,
-                        shape: RoundedRectangleBorder(side: BorderSide(width: 0,color: Color(0xFF740682)), borderRadius: BorderRadius.all(Radius.circular(8))),
+                        shape: RoundedRectangleBorder(
+                            side:
+                                BorderSide(width: 0, color: Color(0xFF740682)),
+                            borderRadius: BorderRadius.all(Radius.circular(8))),
                         labelStyle: TextStyle(color: Colors.black),
                         avatar: CircleAvatar(
-                          backgroundImage: AssetImage('assets/Tripura_Sundari_Temple,_Udaipur.jpg'),
+                          backgroundImage: AssetImage(
+                              'assets/Tripura_Sundari_Temple,_Udaipur.jpg'),
                         ),
                       ),
                     ),
@@ -224,7 +227,10 @@ class _myHomeState extends State<myHome> {
                       child: Chip(
                         label: Text('West Tripura'),
                         backgroundColor: Colors.white10,
-                        shape: RoundedRectangleBorder(side: BorderSide(width: 0,color: Color(0xFF740682)), borderRadius: BorderRadius.all(Radius.circular(8))),
+                        shape: RoundedRectangleBorder(
+                            side:
+                                BorderSide(width: 0, color: Color(0xFF740682)),
+                            borderRadius: BorderRadius.all(Radius.circular(8))),
                         labelStyle: TextStyle(color: Colors.black),
                         avatar: CircleAvatar(
                           backgroundImage: AssetImage('assets/99.jpg'),
@@ -236,7 +242,10 @@ class _myHomeState extends State<myHome> {
                       child: Chip(
                         label: Text('Dhalai'),
                         backgroundColor: Colors.white10,
-                        shape: RoundedRectangleBorder(side: BorderSide(width: 0,color: Color(0xFF740682)), borderRadius: BorderRadius.all(Radius.circular(8))),
+                        shape: RoundedRectangleBorder(
+                            side:
+                                BorderSide(width: 0, color: Color(0xFF740682)),
+                            borderRadius: BorderRadius.all(Radius.circular(8))),
                         labelStyle: TextStyle(color: Colors.black),
                         avatar: CircleAvatar(
                           backgroundImage: AssetImage('assets/Dumboor.jpeg'),
@@ -248,7 +257,10 @@ class _myHomeState extends State<myHome> {
                       child: Chip(
                         label: Text('North Tripura'),
                         backgroundColor: Colors.white10,
-                        shape:RoundedRectangleBorder(side: BorderSide(width: 0,color: Color(0xFF740682)), borderRadius: BorderRadius.all(Radius.circular(8))),
+                        shape: RoundedRectangleBorder(
+                            side:
+                                BorderSide(width: 0, color: Color(0xFF740682)),
+                            borderRadius: BorderRadius.all(Radius.circular(8))),
                         labelStyle: TextStyle(color: Colors.black),
                         avatar: CircleAvatar(
                           backgroundImage: AssetImage('assets/jampui.png'),
@@ -260,7 +272,10 @@ class _myHomeState extends State<myHome> {
                       child: Chip(
                         label: Text('Shepahijala'),
                         backgroundColor: Colors.white10,
-                        shape:RoundedRectangleBorder(side: BorderSide(width: 0,color: Color(0xFF740682)), borderRadius: BorderRadius.all(Radius.circular(8))),
+                        shape: RoundedRectangleBorder(
+                            side:
+                                BorderSide(width: 0, color: Color(0xFF740682)),
+                            borderRadius: BorderRadius.all(Radius.circular(8))),
                         labelStyle: TextStyle(color: Colors.black),
                         avatar: CircleAvatar(
                           backgroundImage: AssetImage('assets/shepahijala.jpg'),
@@ -272,7 +287,10 @@ class _myHomeState extends State<myHome> {
                       child: Chip(
                         label: Text('South Tripura'),
                         backgroundColor: Colors.white10,
-                        shape: RoundedRectangleBorder(side: BorderSide(width: 0,color: Color(0xFF740682)), borderRadius: BorderRadius.all(Radius.circular(8))),
+                        shape: RoundedRectangleBorder(
+                            side:
+                                BorderSide(width: 0, color: Color(0xFF740682)),
+                            borderRadius: BorderRadius.all(Radius.circular(8))),
                         labelStyle: TextStyle(color: Colors.black),
                         avatar: CircleAvatar(
                           backgroundImage: AssetImage('assets/pilak.jpeg'),
@@ -284,7 +302,10 @@ class _myHomeState extends State<myHome> {
                       child: Chip(
                         label: Text('Unokoti'),
                         backgroundColor: Colors.white10,
-                        shape: RoundedRectangleBorder(side: BorderSide(width: 0,color: Color(0xFF740682)), borderRadius: BorderRadius.all(Radius.circular(8))),
+                        shape: RoundedRectangleBorder(
+                            side:
+                                BorderSide(width: 0, color: Color(0xFF740682)),
+                            borderRadius: BorderRadius.all(Radius.circular(8))),
                         labelStyle: TextStyle(color: Colors.black),
                         avatar: CircleAvatar(
                           backgroundImage: AssetImage('assets/unokoti.avif'),
@@ -296,8 +317,11 @@ class _myHomeState extends State<myHome> {
                       child: Chip(
                         label: Text('Khowai'),
                         backgroundColor: Colors.white10,
-                        shape: RoundedRectangleBorder(side: BorderSide(width: 0,color: Color(
-                            0xFF740682)), borderRadius: BorderRadius.all(Radius.circular(10))),
+                        shape: RoundedRectangleBorder(
+                            side:
+                                BorderSide(width: 0, color: Color(0xFF740682)),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(10))),
                         labelStyle: TextStyle(color: Colors.black),
                         avatar: CircleAvatar(
                           backgroundImage: AssetImage('assets/Baramura.jpeg'),
@@ -628,7 +652,6 @@ class _myHomeState extends State<myHome> {
           ),
         )) ??
         false;
-
   }
 }
 

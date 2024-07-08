@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:TouristSpot_Booking_System/welcomeScreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'Login.dart';
 import 'Profile.dart';
 import 'home_page.dart';
 import 'access_tokens.dart';
@@ -596,8 +597,7 @@ class _MyDetailState extends State<MyDetail> {
               onTap: () {
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(
-                      builder: (context) => const WelcomeScreen()),
+                  MaterialPageRoute(builder: (context) => const MyLogin()),
                 );
               },
             ),

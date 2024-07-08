@@ -60,7 +60,7 @@ class _MyLoginState extends State<MyLogin> {
                         controller: emailController,
                         decoration: const InputDecoration(
                           suffixIcon: Icon(
-                            Icons.check,
+                            Icons.email,
                             color: Colors.grey,
                           ),
                           label: Text(

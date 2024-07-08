@@ -105,7 +105,7 @@ class _MyRegisterState extends State<MyRegister> {
                         controller: nameController,
                         decoration: InputDecoration(
                           suffixIcon: Icon(
-                            Icons.check,
+                            Icons.title,
                             color: Colors.grey,
                           ),
                           label: Text(
@@ -122,7 +122,7 @@ class _MyRegisterState extends State<MyRegister> {
                         controller: emailController,
                         decoration: InputDecoration(
                           suffixIcon: Icon(
-                            Icons.check,
+                            Icons.email,
                             color: Colors.grey,
                           ),
                           label: Text(
@@ -140,7 +140,7 @@ class _MyRegisterState extends State<MyRegister> {
                         keyboardType: TextInputType.phone,
                         decoration: InputDecoration(
                           suffixIcon: Icon(
-                            Icons.check,
+                            Icons.phone,
                             color: Colors.grey,
                           ),
                           label: Text(
@@ -157,7 +157,7 @@ class _MyRegisterState extends State<MyRegister> {
                         controller: addressController,
                         decoration: InputDecoration(
                           suffixIcon: Icon(
-                            Icons.check,
+                            Icons.location_on,
                             color: Colors.grey,
                           ),
                           label: Text(
